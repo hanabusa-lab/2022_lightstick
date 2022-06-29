@@ -1,0 +1,70 @@
+@startuml
+
+class SystemManager
+
+class CycleEventManager
+
+class TrigerEventManager
+
+class PanelIndicator
+
+class LetterIndicator
+
+class BackgroundIndicator
+
+class MicrobitReceiver
+
+class MicrobitSender
+
+class ColorProcesser
+
+class ReferenceCalculator
+
+class PanelCommander
+
+class ColorStocker
+
+class Color
+
+class SwitchHandler
+
+
+SystemManager --> CycleEventManager
+SystemManager --> TrigerEventManager
+
+CycleEventManager --> PanelIndicator
+CycleEventManager --> LetterIndicator
+CycleEventManager --> PanelCommander
+CycleEventManager --> BackgroundIndicator
+
+TrigerEventManager --> ColorStocker
+TrigerEventManager --> SwitchHandler
+TrigerEventManager --> PanelCommander
+
+PanelIndicator --> ColorProcesser
+PanelIndicator --> ReferenceCalculator
+PanelIndicator --> ColorStocker
+
+PanelCommander --> MicrobitSender
+PanelCommander --> ColorStocker
+
+ColorProcesser --> MicrobitReceiver
+
+ColorProcesser --> ColorStocker
+
+ReferenceCalculator --> ColorProcesser
+
+
+LetterIndicator --> ColorStocker
+
+
+ColorStocker --> Color
+
+TrigerEventManager --> MicrobitReceiver
+
+
+
+
+
+
+@enduml
