@@ -37,11 +37,15 @@ function preload() {
   //font = loadFont('assets/keifont.ttf');
   frameRate(30);
 
-  gMonster_Ghost.setImage(Monster_Status.Normal, loadImage("assets/ghost_normal.jpg"));
-  gMonster_Ghost.setImage(Monster_Status.Atacking, loadImage("assets/ghost_atacking.jpg"));
-  gMonster_Ghost.setImage(Monster_Status.Atacked, loadImage("assets/ghost_atacked.jpg"));
-  gMonster_Ghost.setImage(Monster_Status.Dead, loadImage("assets/ghost_dead.jpg"));
-  gMonster_Ghost.img =  loadImage("assets/ghost_dead.jpg");
+  //Ghost作成
+  let monster = new Monster();
+  monster.kind = Monster_Kind.Ghost;
+  monster.setImage(Monster_Status.None, loadImage("assets/ghost_none.jpg"));
+  monster.setImage(Monster_Status.Normal, loadImage("assets/ghost_normal.jpg"));
+  monster.setImage(Monster_Status.Atacking, loadImage("assets/ghost_atacking.jpg"));
+  monster.setImage(Monster_Status.Atacked, loadImage("assets/ghost_atacked.jpg"));
+  monster.setImage(Monster_Status.Dead, loadImage("assets/ghost_dead.jpg"));
+  //gMonster_Ghost.img =  loadImage("assets/ghost_dead.jpg");
 
   //モンスターリストへの追加
   gMonsterList.push(gMonster_Ghost);

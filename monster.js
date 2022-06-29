@@ -1,10 +1,7 @@
-
-
 //モンスターの種類
 var Monster_Kind = {
-    A : 1,
-    B : 2,
-    C : 3,
+    Ghost : 1,
+    Dragon : 2,
 };
 
 //モンスターのHP
@@ -41,6 +38,8 @@ class Monster{
     {
         //ステータスと、imgの紐付けを行う。
         this.imgDict[mstatus] = img;
+        var timg = this.imgDict[mstatus];
+        console.log("img", timg)
     }
 
     draw()
@@ -50,8 +49,8 @@ class Monster{
         translate(100,100);
         rotate(this.angle);
         scale(this.scale);
-        image(this.img,0,0);
-        //image(this.imgDict[this.status],0,0);
+        //image(this.img,0,0);
+        image(this.imgDict[this.status],0,0);
         
         //image(this.img,this.x,this.y);
         
