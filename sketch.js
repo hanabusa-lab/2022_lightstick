@@ -46,19 +46,21 @@ function preload() {
   monster.setImage(Monster_Status.Atacked, loadImage("assets/ghost_atacked.jpg"));
   monster.setImage(Monster_Status.Dead, loadImage("assets/ghost_dead.jpg"));
   monster.scale=0.1
-  //gMonster_Ghost.img =  loadImage("assets/ghost_dead.jpg");
-
-  //gMonster_Ghost.setImage(Monster_Status.Normal, loadImage("assets/ghost_normal.jpg"));
-  //gMonster_Ghost.setImage(Monster_Status.Atacking, loadImage("assets/ghost_atacking.jpg"));
-  //gMonster_Ghost.setImage(Monster_Status.Atacked, loadImage("assets/ghost_atacked.jpg"));
-  //gMonster_Ghost.setImage(Monster_Status.Dead, loadImage("assets/ghost_dead.jpg"));
-  //gMonster_Ghost.img =  loadImage("assets/ghost_dead.jpg");
-  //gMonster_Ghost.scale=0.1
   //モンスターリストへの追加
   gMonsterList.push(monster);
 
-  //img = loadImage("assets/ghost_normal.jpg");
-  //monster1.setImage(img); 
+  //ドラゴンの作成
+  monster = new Monster();
+  monster.kind = Monster_Kind.Dragon;
+  monster.setImage(Monster_Status.None, loadImage("assets/dragon_none.jpg"));
+  monster.setImage(Monster_Status.Normal, loadImage("assets/dragon_normal.jpg"));
+  monster.setImage(Monster_Status.Atacking, loadImage("assets/dragon_atacking.jpg"));
+  monster.setImage(Monster_Status.Atacked, loadImage("assets/dragon_atacked.jpg"));
+  monster.setImage(Monster_Status.Dead, loadImage("assets/dragon_dead.jpg"));
+  monster.scale=0.1
+  //モンスターリストへの追加
+  gMonsterList.push(monster);
+
 }
 
 function setup() {
@@ -69,8 +71,6 @@ function setup() {
   let monster=new Monster();
   monster.x =100;
   monster.y =100;
-  
-  
 
     
 }
@@ -82,6 +82,31 @@ function draw() {
     background(0); 
     fill(255);
     textSize(12);
+
+    //キーボードによる処理
+    if (keyIsPressed==true && key == "n") {
+      console.log("n");
+      //monster listのステータスを変える
+      for (let i = 0; i < gMonsterList.length; ++i) {
+        gMonsterList[i].status = Monster_Status.Normal;
+      }   
+    }
+    if (keyIsPressed==true && key == "a") {
+      console.log("a");
+      //monster listのステータスを変える
+      for (let i = 0; i < gMonsterList.length; ++i) {
+        gMonsterList[i].status = Monster_Status.Atacking;
+      }   
+    }
+    if (keyIsPressed==true && key == "d") {
+      console.log("d");
+      //monster listのステータスを変える
+      for (let i = 0; i < gMonsterList.length; ++i) {
+        gMonsterList[i].status = Monster_Status.Dead;
+      }   
+    }
+
+
     let keys =gMessageList.getKeyList();
     //console.log("keys",keys);
     for (let i = 0; i < keys.length; ++i) {

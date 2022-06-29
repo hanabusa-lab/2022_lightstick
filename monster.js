@@ -42,17 +42,21 @@ class Monster{
         console.log("img", timg)
     }
 
-    draw()
-    {
-        
+    draw(){
         push();
-        translate(100,100);
+        //translate(100,100);
+        if(this.status==Monster_Status.Normal){
+            translate(this.x,this.y);
+        }
+      
+        if(this.status==Monster_Status.Atacking){
+            translate(this.x+Math.random()*30,this.y+Math.random()*30);
+        }
+      
         rotate(this.angle);
         scale(this.scale);
         //image(this.img,0,0);
         image(this.imgDict[this.status],0,0);
-        
-        //image(this.img,this.x,this.y);
         
         pop();
     }
