@@ -16,17 +16,18 @@ let imageQuestion5;
 let i = 0;
 
 //表示モンスター
-let monster1=new Monster();
-let monster1_img=null;
-let img=null;
+//let monster1=new Monster();
+//let monster1_img=null;
+//let img=null;
 
+//モンスターのリスト
+let gMonsterList = [];
+let gMonster_Ghost = new Monster();
+let gMonster_Dragon = new Monster();
 
 
 // const { webFrame } = require('electron')
 // webFrame.registerURLSchemeAsPrivileged('file')
-
-
-
 
 
 function preload() {
@@ -35,13 +36,31 @@ function preload() {
   // font = loadFont('assets/SourceSansPro-Regular.ttf');
   //font = loadFont('assets/keifont.ttf');
   frameRate(30);
-  img = loadImage("assets/Q1.jpg");
-  monster1.setImage(img); 
+
+  gMonster_Ghost.setImage(Monster_Status.Normal, loadImage("assets/ghost_normal.jpg"));
+  gMonster_Ghost.setImage(Monster_Status.Atacking, loadImage("assets/ghost_atacking.jpg"));
+  gMonster_Ghost.setImage(Monster_Status.Atacked, loadImage("assets/ghost_atacked.jpg"));
+  gMonster_Ghost.setImage(Monster_Status.Dead, loadImage("assets/ghost_dead.jpg"));
+  gMonster_Ghost.img =  loadImage("assets/ghost_dead.jpg");
+
+  //モンスターリストへの追加
+  gMonsterList.push(gMonster_Ghost);
+
+  //img = loadImage("assets/ghost_normal.jpg");
+  //monster1.setImage(img); 
 }
 
 function setup() {
   createCanvas(800, 800);
   angleMode(DEGREES); 
+
+  //モンスターの生成
+  let monster=new Monster();
+  monster.x =100;
+  monster.y =100;
+  
+  
+
     
 }
 
@@ -64,9 +83,16 @@ function draw() {
       }
       //text("auau", 10, 10+10*i);
     }
-    monster1.draw();
-    monster1.scale=0.1;
-    monster1.angle+=0.1;
+
+    //モンスターの表示
+    for (let i = 0; i < gMonsterList.length; ++i) {
+      gMonsterList[i].draw();
+      
+    }
+
+    //monster1.draw();
+    //monster1.scale=0.1;
+    //monster1.angle+=0.1;
     
   //systemManager.executeSystem();
 }
