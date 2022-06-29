@@ -41,7 +41,7 @@ function preload() {
   let monster = new Monster();
   monster.kind = Monster_Kind.Ghost;
   monster.setImage(Monster_Status.None, loadImage("assets/ghost_none.jpg"));
-  monster.setImage(Monster_Status.Normal, loadImage("assets/ghost_normal.jpg"));
+  monster.setImage(Monster_Status.Normal, [loadImage("assets/ghost_normal.jpg"),loadImage("assets/ghost_normal2.jpg") ]);
   monster.setImage(Monster_Status.Atacking, loadImage("assets/ghost_atacking.jpg"));
   monster.setImage(Monster_Status.Atacked, loadImage("assets/ghost_atacked.jpg"));
   monster.setImage(Monster_Status.Dead, loadImage("assets/ghost_dead.jpg"));
@@ -58,8 +58,9 @@ function preload() {
   monster.setImage(Monster_Status.Atacked, loadImage("assets/dragon_atacked.jpg"));
   monster.setImage(Monster_Status.Dead, loadImage("assets/dragon_dead.jpg"));
   monster.scale=0.1
+  monster.status = Monster_Status.Normal;
   //モンスターリストへの追加
-  gMonsterList.push(monster);
+  //gMonsterList.push(monster);
 
 }
 
@@ -105,7 +106,6 @@ function draw() {
         gMonsterList[i].status = Monster_Status.Dead;
       }   
     }
-
 
     let keys =gMessageList.getKeyList();
     //console.log("keys",keys);
