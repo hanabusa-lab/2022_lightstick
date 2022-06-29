@@ -37,6 +37,7 @@ function preload() {
   //font = loadFont('assets/keifont.ttf');
   frameRate(30);
 
+<<<<<<< Updated upstream
   //Ghost作成
   let monster = new Monster();
   monster.kind = Monster_Kind.Ghost;
@@ -47,6 +48,14 @@ function preload() {
   monster.setImage(Monster_Status.Dead, loadImage("assets/ghost_dead.jpg"));
   //gMonster_Ghost.img =  loadImage("assets/ghost_dead.jpg");
 
+=======
+  gMonster_Ghost.setImage(Monster_Status.Normal, loadImage("assets/ghost_normal.jpg"));
+  gMonster_Ghost.setImage(Monster_Status.Atacking, loadImage("assets/ghost_atacking.jpg"));
+  gMonster_Ghost.setImage(Monster_Status.Atacked, loadImage("assets/ghost_atacked.jpg"));
+  gMonster_Ghost.setImage(Monster_Status.Dead, loadImage("assets/ghost_dead.jpg"));
+  gMonster_Ghost.img =  loadImage("assets/ghost_dead.jpg");
+  gMonster_Ghost.scale=0.1
+>>>>>>> Stashed changes
   //モンスターリストへの追加
   gMonsterList.push(gMonster_Ghost);
 
@@ -55,7 +64,7 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(800, 800);
+  createCanvas(1280, 1024);
   angleMode(DEGREES); 
 
   //モンスターの生成
@@ -90,6 +99,7 @@ function draw() {
 
     //モンスターの表示
     for (let i = 0; i < gMonsterList.length; ++i) {
+      
       gMonsterList[i].draw();
       
     }
