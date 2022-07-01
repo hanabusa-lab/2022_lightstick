@@ -79,10 +79,10 @@ function preload() {
   //マジックの作成
   magic = new Magic();
   magic.kind = Magic_Kind.Fire;
-  magic.setImage(Magic_Status.Create, loadImage("assets/fire_create.png"))
+  magic.setImage(Magic_Status.Create, [loadImage("assets/fire_create.png")])
   magic.setImage(Magic_Status.Normal, [loadImage("assets/fire_normal1.png"), loadImage("assets/fire_normal2.png"),])
-  magic.setImage(Magic_Status.Hit, loadImage("assets/fire_hit.png"))
-  magic.setImage(Magic_Status.End, loadImage("assets/fire_end.png"))
+  magic.setImage(Magic_Status.Hit, [loadImage("assets/fire_hit.png")])
+  magic.setImage(Magic_Status.End, [loadImage("assets/fire_end.png")])
 
   gMagicTempDict[Magic_Kind.Fire]=magic;
 }

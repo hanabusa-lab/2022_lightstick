@@ -40,6 +40,7 @@ class Magic{
         this.imgIndex=0;
     }
 
+    //マジックを複製する。
     clone() {
         //もう少し、格好いいやり方あると思います。
         var clone = new Magic();
@@ -76,38 +77,37 @@ class Magic{
 
     draw(){
         push();
-        //translate(100,100);
-        if(this.status==Magic_Status.Normal){
-            translate(this.x,this.y);
+        let timg = null;
+        //imgがリストの場合
+        console.log("this.imgIndex", this.imgIndex);      
+        timg = this.imgDict[this.status][this.imgIndex];
+        //timg = this.imgDict[this.status];
+        if(Date.now()-this.preImgTime>1000){
+            this.imgIndex+=1;
+            if(this.imgDict[this.status].length<=this.imgIndex){
+                this.imgIndex = 0;
+            }
+            this.preImgTime = Date.now();
         }
       
-        if(this.status==Magic_Status.Atacking){
+        //ヒットの時だけ、ランダム動作
+        if(this.status==Magic_Status.Hit){
             translate(this.x+Math.random()*30,this.y+Math.random()*30);
+        }else{
+            //translate(this.x,this.y);
+            translate(this.x-timg.width/2,this.y-timg.height/2);
         }
-      
         rotate(this.angle);
         scale(this.scale);
-        //image(this.img,0,0);
-        //ノーマルの時には、画像が複数あるので、
-        if(this.status==Magic_Status.Normal){
-            console.log("this.imgIndexNormal", this.imgIndexNormal)
-              
-            image(this.imgDict[this.status][this.imgIndexNormal],0,0);
-            //image(this.imgDict[this.status][1],0,0);
-            if(Date.now()-this.preImgTime>1000){
-                this.imgIndexNormal+=1;
-                if(this.imgDict[this.status].length<=this.imgIndexNormal){
-                    this.imgIndexNormal = 0;
-                }
-                this.preImgTime = Date.now();
-                console.log("this.imgIndexNormal", this.imgIndexNormal)
-                 
-            }
-
-        }else{
-            image(this.imgDict[this.status],0,0);    
-        }
         
+        //画像がリストの場合には切り替える。
+
+        //ノーマルの時には、画像が複数あるので、
+        
+        //image(this.imgDict[this.status][1],0,0);
+        
+        image(timg,0,0);
+        //image(this.imgDict[this.status],0,0);  
         pop();
     }
 }
