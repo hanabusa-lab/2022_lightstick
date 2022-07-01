@@ -1,149 +1,104 @@
-// import {SystemManager} from './SystemManager.js'
-
-
-const barWidth = 20;
-let lastBar = -1;
-
-let font,
-  fontsize = 32;
-
-//表示モンスター
-//let monster1=new Monster();
-//let monster1_img=null;
-//let img=null;
-
-//キャンバスサイズ
-let gCanvasSize = [1280, 1024];
-
-//モニターのサイズ
-let gMonitorSize = [1280, 100];
-
-//オペレータの位置リスト
-let gOperatorPosDict = {};
-
-//ターゲットの位置リスト
-let gTargetPosDict = {};
-
-
-//モンスターのリスト
-let gMonsterList = [];
-let gMonster_Ghost = new Monster();
-let gMonster_Dragon = new Monster();
-
+let gCanvasSize = [1280, 1024]; //キャンバスサイズ
+let gMonitorSize = [1280, 100]; //モニターのサイズ
+//let gOperatorPosDict = {};//オペレータの位置リスト
+let gTargetPosDict = {};//ターゲットの位置リスト
+let gMonsterList = []; //モンスターのリスト
 
 //マジックのリスト(テンプレート)。実際のマジックは、ここにあるテンプレートをコピーして発動する。
 //マジックの画像などを保持すつことを目的として作っている。
 let gMagicTempDict = {};
-//マジックのリスト
-let gMagicList = [];
+let gMagicList = [];　//マジックのリスト
+let gPlayerList = [];//プレイヤーのリスト
+let gTestPlayserID = 1; //デバック用のプレーヤID
 
-
-
-
-// const { webFrame } = require('electron')
-// webFrame.registerURLSchemeAsPrivileged('file')
-
-
+//アセットの読み込み、各種情報の初期化
 function preload() {
   // Ensure the .ttf or .otf font stored in the assets directory
   // is loaded before setup() and draw() are called
-  // font = loadFont('assets/SourceSansPro-Regular.ttf');
-  //font = loadFont('assets/keifont.ttf');
   frameRate(30);
+
+  //ユニット毎のターゲット位置を初期化する。
+  gTargetPosDict[0] = [(gCanvasSize[0])/4, (gCanvasSize[1]-gMonitorSize[1])/4];
+  gTargetPosDict[1] = [(gCanvasSize[0])*3/4, (gCanvasSize[1]-gMonitorSize[1])/4];
+  gTargetPosDict[2] = [(gCanvasSize[0])/4, (gCanvasSize[1]-gMonitorSize[1])*3/4];
+  gTargetPosDict[3] = [(gCanvasSize[0])*3/4, (gCanvasSize[1]-gMonitorSize[1])*3/4];  
 
   //Ghost作成
   let monster = new Monster();
   monster.kind = Monster_Kind.Ghost;
-  monster.setImage(Monster_Status.None, loadImage("assets/ghost_none.jpg"));
-  monster.setImage(Monster_Status.Normal, [loadImage("assets/ghost_normal.jpg"),loadImage("assets/ghost_normal2.jpg") ]);
-  monster.setImage(Monster_Status.Atacking, loadImage("assets/ghost_atacking.jpg"));
-  monster.setImage(Monster_Status.Atacked, loadImage("assets/ghost_atacked.jpg"));
-  monster.setImage(Monster_Status.Dead, loadImage("assets/ghost_dead.jpg"));
-  monster.scale=0.1
+  let timg = loadImage("assets/ghost_normal.png");
+  monster.setImage(Monster_Status.Create, [timg]); //createはnormalと一緒
+  monster.setImage(Monster_Status.Normal, [timg,loadImage("assets/ghost_normal2.png")]);
+  monster.setImage(Monster_Status.Atacking, [loadImage("assets/ghost_atacking.png")]);
+  timg = loadImage("assets/ghost_atacked.png");
+  monster.setImage(Monster_Status.Atacked, [timg]);
+  monster.setImage(Monster_Status.Dead, [timg]); //deadとatackedは一緒。
+  monster.changeStatus(Monster_Status.Create);
   //モンスターリストへの追加
   gMonsterList.push(monster);
 
   //ドラゴンの作成
   monster = new Monster();
   monster.kind = Monster_Kind.Dragon;
-  monster.setImage(Monster_Status.None, loadImage("assets/dragon_none.jpg"));
-  monster.setImage(Monster_Status.Normal, loadImage("assets/dragon_normal.jpg"));
-  monster.setImage(Monster_Status.Atacking, loadImage("assets/dragon_atacking.jpg"));
-  monster.setImage(Monster_Status.Atacked, loadImage("assets/dragon_atacked.jpg"));
-  monster.setImage(Monster_Status.Dead, loadImage("assets/dragon_dead.jpg"));
-  monster.scale=0.1
+  monster.setImage(Monster_Status.Create, [loadImage("assets/dragon_create.jpg")]);
+  monster.setImage(Monster_Status.Normal, [loadImage("assets/dragon_normal.jpg")]);
+  monster.setImage(Monster_Status.Atacking, [loadImage("assets/dragon_atacking.jpg")]);
+  monster.setImage(Monster_Status.Atacked, [loadImage("assets/dragon_atacked.jpg")]);
+  monster.setImage(Monster_Status.Dead, [loadImage("assets/dragon_dead.jpg")]);
   monster.status = Monster_Status.Normal;
-  //モンスターリストへの追加
-  //gMonsterList.push(monster);
 
-  //マジックの作成
+  //マジックの作成。テンプレートを作成。実際のものは、これをクローンいて生成する。
+  //炎
   magic = new Magic();
   magic.kind = Magic_Kind.Fire;
-  magic.setImage(Magic_Status.Create, [loadImage("assets/fire_create.png"),loadImage("assets/fire_create.png"),loadImage("assets/fire_create.png")])
+  magic.setImage(Magic_Status.Create, [loadImage("assets/fire_create.png"),loadImage("assets/fire_create.png")])
   magic.setImage(Magic_Status.Normal, [loadImage("assets/fire_normal1.png"), loadImage("assets/fire_normal2.png"),])
   magic.setImage(Magic_Status.Hit, [loadImage("assets/fire_hit.png")])
   magic.setImage(Magic_Status.End, [loadImage("assets/fire_end.png")])
-
   gMagicTempDict[Magic_Kind.Fire]=magic;
 }
 
+//画面関連の初期化
 function setup() {
   createCanvas(gCanvasSize[0], gCanvasSize[1]);
   angleMode(DEGREES); 
-
-  //モンスターの生成
-  let monster=new Monster();
-  monster.x =100;
-  monster.y =100;
-
-  //operatorの位置を初期化する。
-  gOperatorPosDict[0] = [(gMonitorSize[0])/4, (gCanvasSize[1]-gMonitorSize[1]/2)];
-  gOperatorPosDict[1] = [(gMonitorSize[0])/4*2, (gCanvasSize[1]-gMonitorSize[1]/2)];
-  gOperatorPosDict[2] = [(gMonitorSize[0])/4*3, (gCanvasSize[1]-gMonitorSize[1]/2)];
-  gOperatorPosDict[3] = [(gMonitorSize[0])/4*4, (gCanvasSize[1]-gMonitorSize[1]/2)];
-
-  //ユニット毎のターゲット位置を初期化する。
-  gTargetPosDict[0] = [(gCanvasSize[0])/4, (gCanvasSize[1]-gMonitorSize[1])/4];
-  gTargetPosDict[1] = [(gCanvasSize[0])*3/4, (gCanvasSize[1]-gMonitorSize[1])/4];
-  gTargetPosDict[2] = [(gCanvasSize[0])/4, (gCanvasSize[1]-gMonitorSize[1])*3/4];
-  gTargetPosDict[3] = [(gCanvasSize[0])*3/4, (gCanvasSize[1]-gMonitorSize[1])*3/4];
-  
 }
 
 //オペレータの位置を取得する
-function getOperatorPos(oID){
-  for(var key in gOperatorPosDict) {
-    console.log(oID, key);
-    if(oID==key){
-      return gOperatorPosDict[key];
+function getOperatorPos(oid){
+  for(var player of gPlayerList){
+    if(player.oid==oid){
+      return [player.x, player.y];
     }
   }
   //見つからない場合には、端っこ。
+  console.log("error. no oid")
   return [(gCanvasSize[0]-gMonitorSize[0]), (gCanvasSize[1]-gMonitorSize[1])]; 
 }
 
 //ターゲットの位置を取得する
-function getTargetPos(uID){
+function getTargetPos(uid){
   for(var key in gTargetPosDict){
-    if(uID==key){
+    if(uid==key){
       return gTargetPosDict[key];
     }
     //見つからない場合には、端っこ。
+    console.log("error. no uid")
     return [(gCanvasSize[0]-gMonitorSize[0]), (gCanvasSize[1]-gMonitorSize[1])];
   }
 }
 
 //受け取った内容に応じてMagicを作成する。
-function createMagic(oID, uID, message){
-  //oID(オペレータID)からスタート位置を決める。
-  let opos = getOperatorPos(oID);
+function createMagic(oid, uid, message){
+  //oid(オペレータID)からスタート位置を決める。
+  let opos = getOperatorPos(oid);
 
-  //uID(受信機のID)からターゲットモンスターを決めてターゲット位置を決める。
-  let tpos = getTargetPos(uID);
+  //uid(受信機のID)からターゲットモンスターを決めてターゲット位置を決める。
+  let tpos = getTargetPos(uid);
 
   //メッセージから呪文の種類を決める。
   //TBD今は、炎限定
-  let magicKind = Magic_HP.Fire;
+  let magicKind = Magic_Kind.Fire;
 
   //マジックのテンプレートから、magicをクローンする。
   let magic = gMagicTempDict[Magic_Kind.Fire];
@@ -156,47 +111,80 @@ function createMagic(oID, uID, message){
   cloneMagic.y = opos[1];
   cloneMagic.target_x = tpos[0];
   cloneMagic.target_y = tpos[1];
-  cloneMagic.status = Magic_Status.Create;
+  cloneMagic.oid = oid;
+  cloneMagic.changeStatus(Magic_Status.Create);
+  cloneMagic.setVelocity(opos, tpos, Magic_Speed.Low);
 
   //magic listに追加する。
   gMagicList.push(cloneMagic);
 }
 
-//let systemManager = new SystemManager;
+//プレーヤーの作成
+function createPlayer(oid){
+  var player = new Player();
+  player.oid = oid;
+  gPlayerList.push(player);
 
+  //プレーヤーの数ごとに、モニタ上の位置を変更する。
+  //TBD:プレーヤーは最大12名まで。今のところ4名まで。
+  if(1<=gPlayerList.length && gPlayerList.length <=4){
+    for(var i=0; i<gPlayerList.length; i++){
+      gPlayerList[i].x = gMonitorSize[0]/4*i+gMonitorSize[0]/8;
+      gPlayerList[i].y = gCanvasSize[1]-gMonitorSize[1];    
+    }
+  }else{
+    console.log("invalid playser number.")
+  }
+}
+
+//描画処理
 function draw() {
     //背景の塗りつぶし
     background(0); 
     fill(255);
-    textSize(12);
+    textSize(20);
 
     //キーボードによる処理
     //nはモンスターのステータス変更
-    if (keyIsPressed==true && key == "n") {
-      console.log("n");
-      //monster listのステータスを変える
-      for (let i = 0; i < gMonsterList.length; ++i) {
-        gMonsterList[i].status = Monster_Status.Normal;
-      }   
-    }
-    if (keyIsPressed==true && key == "a") {
-      console.log("a");
-      //monster listのステータスを変える
-      for (let i = 0; i < gMonsterList.length; ++i) {
-        gMonsterList[i].status = Monster_Status.Atacking;
-      }   
-    }
-    if (keyIsPressed==true && key == "d") {
-      console.log("d");
-      //monster listのステータスを変える
-      for (let i = 0; i < gMonsterList.length; ++i) {
-        gMonsterList[i].status = Monster_Status.Dead;
-      }   
-    }
-    //マジックの生成
-    if (keyIsPressed==true && key == "m") {
-      console.log("m");
-      createMagic(0, 0, "FIRE");
+    if (keyIsPressed==true){
+      if(key == "n") {
+        console.log("n");
+        //monster listのステータスを変える
+        for (let i = 0; i < gMonsterList.length; ++i) {
+          gMonsterList[i].status = Monster_Status.Normal;
+        }   
+      }
+      if (key == "a") {
+        console.log("a");
+        //monster listのステータスを変える
+        for (let i = 0; i < gMonsterList.length; ++i) {
+          gMonsterList[i].status = Monster_Status.Atacking;
+        }   
+      }
+      if (key == "d") {
+        console.log("d");
+        //monster listのステータスを変える
+        for (let i = 0; i < gMonsterList.length; ++i) {
+          gMonsterList[i].status = Monster_Status.Dead;
+        }   
+      }
+      //マジックの生成
+      if (key == "m") {
+        console.log("m");
+        createMagic(1, 0, "FIRE");
+      }
+      //プレイヤーの生成
+      if (key == "p") {
+        console.log("p");
+        createPlayer(gTestPlayserID);
+        gTestPlayserID+=1;
+      }
+      let now = Date.now();
+      while(true){
+        if(Date.now()-now>100){
+          break;
+        }
+      }    
     }
 
     let keys =gMessageList.getKeyList();
@@ -209,12 +197,16 @@ function draw() {
       if(gMessageList.isCompleted(message)){
         gMessageList.deleteMessage(ou[0],ou[1]);
       }
-      //text("auau", 10, 10+10*i);
     }
 
     //モンスターの表示
     for (let i = 0; i < gMonsterList.length; ++i) {
       gMonsterList[i].draw();
+    }
+
+    //プレーヤーの表示
+    for (let i = 0; i < gPlayerList.length; ++i) {
+      gPlayerList[i].draw();
     }
 
     //マジックの表示
@@ -223,18 +215,37 @@ function draw() {
     }
     //属性がNoneものものは削除する
     gMagicList = gMagicList.filter(n => n.status !== Magic_Status.None);
-   /* console.log("magic list length=",gMagicList.length);
-    for (let i = 0; i < gMagicList.length; ++i) {
-      console.log(gMagicList[i].status);     
-    }*/
-  
+    gMonsterList = gMonsterList.filter(n => n.status !== Monster_Status.None);
+    //console.log("magiclength=",gMagicList.length, "monster length=",gMonsterList.length);
     
-    //monster1.draw();
-    //monster1.scale=0.1;
-    //monster1.angle+=0.1;
-    
-  //systemManager.executeSystem();
-}
+    //当たり判定確認
+    let dist = 100;
+    let tdist =0;
+    for(var magic of gMagicList){
+      for(var monster of gMonsterList){
+        //monsterがNone状態なら何も行わない。
+        if(monster.status == Monster_Status.None){
+          continue;
+        }
 
+        tdist = Math.sqrt((magic.x-monster.x)**2+(magic.y-monster.y)**2);
+        console.log("tdist=",tdist);
+        if( tdist < dist && magic.status!=Magic_Status.Hit && monster.status!=Monster_Status.Atacked){
+          magic.changeStatus(Magic_Status.Hit);
+          monster.changeStatus(Monster_Status.Atacked);
+          monster.hp -= magic.power;
+          if(monster.hp<=0){
+            monster.hp = 0;
+            monster.changeStatus(Monster_Status.Dead);
+          }
 
-
+          for(var player of gPlayerList){
+            if(magic.oid == player.oid){
+              player.point+=magic.power;
+              console.log("point=", player.point, "power=",magic.power);
+            }
+          }
+        }
+      }
+    }
+ }

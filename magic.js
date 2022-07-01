@@ -6,8 +6,17 @@ var Magic_Kind = {
     Beam : 4,
 };
 
-//マジックのHP
-var Magic_HP = 100;
+//マジックの速度
+var Magic_Speed = {
+    Low:300,
+    Middle:500,
+    High:700
+}
+
+
+
+//マジックのPower
+var Magic_Power = 10;
 
 //マジックのステータス
 var Magic_Status = {
@@ -28,17 +37,18 @@ class Magic{
         this.target_y=0;  
         this.scale=1;
         this.angle=0;
-        this.owner=-1;
+        this.oid=-1;
         this.img=null;
         this.kind=Magic_Kind.Fire;
-        this.hp =Magic_HP; 
+        this.power =Magic_Power; 
         this.status = Magic_Status.None;
         this.prestatus = Magic_Status.None;
         this.imgDict = {};
         this.img = null;
         this.preImgTime = Date.now(); //画像更新前の時間
+        this.preStatusTime = Date.now();//ステータスの切り替え用
         this.imgIndex=0;
-        this.velo = 1000;  //速度
+        this.velo=[0,0];  //速度
         this.preTime = 0; //draw 更新前の時間
     }
 
@@ -51,12 +61,13 @@ class Magic{
         clone.angle = this.angle;
         clone.img = this.img;
         clone.kind=this.kind;
-        clone.hp =this.hp; 
+        clone.power =this.power; 
         clone.status = this.status;
         clone.imgDict = this.imgDict;
         clone.preImgTime = Date.now();
+        this.preStatusTime = Date.now();    
         clone.imgIndex = this.imgIndex;
-        clone.velo = this.velo;
+        clone.velo = [0,0];
         clone.preTime = Date.now();
         
         return clone;
@@ -70,6 +81,12 @@ class Magic{
 		return clone;*/
 
 	}
+
+    //速度を設定する。
+    setVelocity(sPos, ePos, scale){
+        this.velo[0]= scale*Math.sqrt((ePos[0] - sPos[0])**2)/Math.sqrt((ePos[0]-sPos[0])**2+(ePos[1]-sPos[1])**2);
+        this.velo[1]= scale*Math.sqrt((ePos[1] - sPos[1])**2)/Math.sqrt((ePos[0]-sPos[0])**2+(ePos[1]-sPos[1])**2);
+    }
    
     setImage(mstatus, img)
     {
@@ -79,12 +96,28 @@ class Magic{
         console.log("img", timg)
     }
 
+    //statusを変える場合は、これを使う。
+    changeStatus(status){
+        //ステータスが一緒だったら、何も行わない。
+        /*if(this.status == status){
+            return;
+        }*/
+        this.status = status;
+        this.imgIndex = 0;
+        this.preImgTime = Date.now();
+        this.preStatusTime = Date.now();  
+    }
+
     draw(){
-        console.log("magic state ", this.status);
-        push();
+        //statusがnoneの場合には、何も行わない。
+        if(this.status == Magic_Status.None){
+            return;
+        }
+
+        //console.log("magic state ", this.status);
         let timg = null;
        
-        console.log("this.imgIndex", this.imgIndex);      
+        //console.log("this.imgIndex", this.imgIndex);      
         timg = this.imgDict[this.status][this.imgIndex];
         if(Date.now()-this.preImgTime>300){
             this.imgIndex+=1;
@@ -92,22 +125,16 @@ class Magic{
                 this.imgIndex = 0;
                 //craeate statusの場合には、normalに変える。
                 if(this.status == Magic_Status.Create){
-                    this.imgIndex = 0;
-                    this.status = Magic_Status.Normal;
-                }
-                //end statusの場合には消える
-                if(this.status == Magic_Status.End){
-                    console.log("change to none");
-                  
-                    this.status = Magic_Status.None;
-                }
+                    this.changeStatus(Magic_Status.Normal);
+                }  
             }
             this.preImgTime = Date.now();
         }
-      
+        //console.log("status=",this.status,"timgIndex=",this.imgIndex,"length=",this.imgDict[this.status].length,timg);
+        push();
         //ヒットの時だけ、ランダム動作
         if(this.status==Magic_Status.Hit){
-            translate(this.x+Math.random()*30,this.y+Math.random()*30);
+            translate(this.x+Math.random()*20,this.y+Math.random()*20);
         }else{
             translate(this.x-timg.width/2,this.y-timg.height/2);
         }
@@ -116,20 +143,28 @@ class Magic{
         image(timg,0,0);
         pop();
 
-        //Normalの場合には、移動します。
-        if(this.status == Magic_Status.Normal){
-            this.x = this.x - Math.sqrt((this.target_x -this.x)**2)/Math.sqrt((this.target_x -this.x)**2+(this.target_y -this.y)**2)*(Date.now()-this.preTime)/1000*this.velo;
-            this.y = this.y - Math.sqrt((this.target_y -this.y)**2)/Math.sqrt((this.target_y -this.y)**2+(this.target_y -this.y)**2)*(Date.now()-this.preTime)/1000*this.velo;
-        }
+        //属性の更新
+        //Normal,Hitの場合には、移動します。
+        this.x = this.x - this.velo[0]*(Date.now()-this.preTime)/1000;
+        this.y = this.y - this.velo[1]*(Date.now()-this.preTime)/1000;
 
         //画面のY方向の外に近くなったら消える
-        if(this.y < 100 && !(this.status == Magic_Status.End || this.status == Magic_Status.None)){
-            this.status = Magic_Status.End;
-            this.imgIndex = 0;
-            this.preImgTime = Date.now();
+        if(this.y < 100 && !(this.status == Magic_Status.End)){
+            this.changeStatus(Magic_Status.End);
         }
 
+        //end statusの場合には消える
+        if(this.status == Magic_Status.End && Date.now()-this.preStatusTime > 500){
+            //console.log("change to none");
+            this.changeStatus(this.status = Magic_Status.None);
+            return;
+        }
+        //hitの場合も消える。
+        if(this.status == Magic_Status.Hit && Date.now()-this.preStatusTime > 500){
+            //console.log("change to none");
+            this.changeStatus(this.status = Magic_Status.None);
+            return;
+        }
         this.preTime = Date.now();
-
     }
 }
