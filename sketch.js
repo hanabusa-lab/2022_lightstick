@@ -79,7 +79,7 @@ function preload() {
   //マジックの作成
   magic = new Magic();
   magic.kind = Magic_Kind.Fire;
-  magic.setImage(Magic_Status.Create, [loadImage("assets/fire_create.png")])
+  magic.setImage(Magic_Status.Create, [loadImage("assets/fire_create.png"),loadImage("assets/fire_create.png"),loadImage("assets/fire_create.png")])
   magic.setImage(Magic_Status.Normal, [loadImage("assets/fire_normal1.png"), loadImage("assets/fire_normal2.png"),])
   magic.setImage(Magic_Status.Hit, [loadImage("assets/fire_hit.png")])
   magic.setImage(Magic_Status.End, [loadImage("assets/fire_end.png")])
@@ -219,9 +219,16 @@ function draw() {
 
     //マジックの表示
     for (let i = 0; i < gMagicList.length; ++i) {
-      gMagicList[i].draw();
+      gMagicList[i].draw();     
     }
-
+    //属性がNoneものものは削除する
+    gMagicList = gMagicList.filter(n => n.status !== Magic_Status.None);
+   /* console.log("magic list length=",gMagicList.length);
+    for (let i = 0; i < gMagicList.length; ++i) {
+      console.log(gMagicList[i].status);     
+    }*/
+  
+    
     //monster1.draw();
     //monster1.scale=0.1;
     //monster1.angle+=0.1;
