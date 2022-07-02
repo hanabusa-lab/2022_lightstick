@@ -38,13 +38,10 @@ class Magic{
         this.scale=1;
         this.angle=0;
         this.oid=-1;
-        this.img=null;
         this.kind=Magic_Kind.Fire;
         this.power =Magic_Power; 
         this.status = Magic_Status.None;
-        this.prestatus = Magic_Status.None;
         this.imgDict = {};
-        this.img = null;
         this.preImgTime = Date.now(); //画像更新前の時間
         this.preStatusTime = Date.now();//ステータスの切り替え用
         this.imgIndex=0;
@@ -59,7 +56,6 @@ class Magic{
         //コピーが必要なものだけコピーする。
         clone.scale = this.scale;
         clone.angle = this.angle;
-        clone.img = this.img;
         clone.kind=this.kind;
         clone.power =this.power; 
         clone.status = this.status;

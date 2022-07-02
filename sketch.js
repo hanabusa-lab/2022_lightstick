@@ -1,12 +1,13 @@
 let gCanvasSize = [1280, 1024]; //キャンバスサイズ
 let gMonitorSize = [1280, 100]; //モニターのサイズ
-//let gOperatorPosDict = {};//オペレータの位置リスト
 let gTargetPosDict = {};//ターゲットの位置リスト
+let gMonsterLibDict = {}; //モンスターライブラリのリスト
 let gMonsterList = []; //モンスターのリスト
+let gMonsterCallTime = 0;
 
 //マジックのリスト(テンプレート)。実際のマジックは、ここにあるテンプレートをコピーして発動する。
 //マジックの画像などを保持すつことを目的として作っている。
-let gMagicTempDict = {};
+let gMagicLibDict = {};
 let gMagicList = [];　//マジックのリスト
 let gPlayerList = [];//プレイヤーのリスト
 let gTestPlayserID = 0; //デバック用のプレーヤID
@@ -33,12 +34,12 @@ function preload() {
   timg = loadImage("assets/ghost_atacked.png");
   monster.setImage(Monster_Status.Atacked, [timg]);
   monster.setImage(Monster_Status.Dead, [timg]); //deadとatackedは一緒。
-  monster.changeStatus(Monster_Status.Create);
-  monster.x =getTargetPos(0)[0];
-  monster.y =getTargetPos(0)[1];
+  //monster.changeStatus(Monster_Status.Create);
+  //monster.x =getTargetPos(0)[0];
+  //monster.y =getTargetPos(0)[1];
   
-  //モンスターリストへの追加
-  gMonsterList.push(monster);
+  //モンスターライブラリリストへの追加
+  gMonsterLibDict[monster.kind]=monster;
 
   //ドラゴンの作成
   monster = new Monster();
@@ -58,7 +59,7 @@ function preload() {
   magic.setImage(Magic_Status.Normal, [loadImage("assets/fire_normal1.png"), loadImage("assets/fire_normal2.png"),])
   magic.setImage(Magic_Status.Hit, [loadImage("assets/fire_hit.png")])
   magic.setImage(Magic_Status.End, [loadImage("assets/fire_end.png")])
-  gMagicTempDict[Magic_Kind.Fire]=magic;
+  gMagicLibDict[Magic_Kind.Fire]=magic;
 }
 
 //画面関連の初期化
@@ -81,14 +82,16 @@ function getOperatorPos(oid){
 
 //ターゲットの位置を取得する
 function getTargetPos(uid){
-  for(var key in gTargetPosDict){
-    if(uid==key){
-      return gTargetPosDict[key];
+  for(var k of Object.keys(gTargetPosDict)){
+    //console.log("uid=",uid, "key=",k);
+    if(uid == k){
+      //console.log("hit uid=",uid, "key=",k);
+      return gTargetPosDict[k];
     }
-    //見つからない場合には、端っこ。
-    console.log("error. no uid")
-    return [(gCanvasSize[0]-gMonitorSize[0]), (gCanvasSize[1]-gMonitorSize[1])];
   }
+  //見つからない場合には、端っこ。
+  console.log("error. no uid,uid=",uid, Object.keys(gTargetPosDict))
+  return [(gCanvasSize[0]-gMonitorSize[0]), (gCanvasSize[1]-gMonitorSize[1])];  
 }
 
 //受け取った内容に応じてMagicを作成する。
@@ -104,7 +107,7 @@ function createMagic(oid, uid, message){
   let magicKind = Magic_Kind.Fire;
 
   //マジックのテンプレートから、magicをクローンする。
-  let magic = gMagicTempDict[Magic_Kind.Fire];
+  let magic = gMagicLibDict[Magic_Kind.Fire];
   //TBD magicがない時の対応は行うこと。
   
   //複製する。
@@ -131,6 +134,7 @@ function createPlayer(oid){
   //プレーヤーの数ごとに、モニタ上の位置を変更する。
   //TBD:プレーヤーは最大12名まで。今のところ4名まで。
   if(1<=gPlayerList.length && gPlayerList.length <=4){
+    //for(var player of gPlayerList){
     for(var i=0; i<gPlayerList.length; i++){
       gPlayerList[i].x = gMonitorSize[0]/4*i+gMonitorSize[0]/8;
       gPlayerList[i].y = gCanvasSize[1]-gMonitorSize[1];    
@@ -142,12 +146,94 @@ function createPlayer(oid){
   }
 }
 
+ //当たり判定確認
+function checkHit(){
+  let dist = 30;
+  let tdist =0;
+  for(var magic of gMagicList){
+    for(var monster of gMonsterList){
+      //monsterがNone状態なら何も行わない。
+      if(monster.status == Monster_Status.None){
+        continue;
+      }
+
+      tdist = Math.sqrt((magic.x-monster.x)**2+(magic.y-monster.y)**2);
+      //console.log("tdist=",tdist);
+      if( tdist < dist && magic.status!=Magic_Status.Hit && monster.status!=Monster_Status.Atacked){
+        magic.changeStatus(Magic_Status.Hit);
+        monster.changeStatus(Monster_Status.Atacked);
+        monster.hp -= magic.power;
+        if(monster.hp<=0){
+          monster.hp = 0;
+          monster.changeStatus(Monster_Status.Dead);
+          //モンスターがすぐにと登場しないように、モンスター召喚時間をセットし直す。
+          gMonsterCallTime = Date.now();
+        }
+
+        for(var player of gPlayerList){
+          if(magic.oid == player.oid){
+            player.point+=magic.power;
+            console.log("point=", player.point, "power=",magic.power);
+          }
+        }
+      }
+    }
+  }
+}
+
+//モンスターを召喚する
+function callMonster(){
+  //時間が早かったら、もしくは、4体既にいたらモンスターを召喚しない
+  //tminからtmaの間の時間で召喚する。
+  let tmin=3;
+  let tmax=5;
+  if(Date.now()-gMonsterCallTime < (Math.floor( Math.random() * (tmax +1 - tmin) ) + tmin)*1000){
+    return;
+  }
+  //4体いる場合には追加しない。
+  if(gMonsterList.length >=4 ){
+    return;
+  }
+
+  //ランダムでgMonsterLibDictに入っているものから種別を決める
+  let k = Object.keys(gMonsterLibDict)[Math.floor(Math.random() * Object.keys(gMonsterLibDict).length)];
+
+  //コピーをする。
+  let monster = gMonsterLibDict[k].clone();
+
+  //空いている場所に配置する。
+  let existList = [];
+  for(let monster of gMonsterList){
+    existList.push(String(monster.uid));
+  }
+  //existList.push('0');
+  //existList.push('1');
+
+  let emptyList =Object.keys(gTargetPosDict).filter(function(s){
+  //console.log(existList, existList.indexOf(s));
+  return existList.indexOf(s) == -1 })
+  
+  //ランダムで空いている場所を選ぶ
+  let uid = parseInt(emptyList[ Math.floor( Math.random() * emptyList.length )]) ;
+  
+  monster.uid = uid;
+  monster.x = getTargetPos(uid)[0];
+  monster.y = getTargetPos(uid)[1];
+  monster.changeStatus(Monster_Status.Create);
+
+  gMonsterList.push(monster);
+  
+  gMonsterCallTime = Date.now();
+}
+
 //描画処理
 function draw() {
     //背景の塗りつぶし
     background(0); 
     fill(255);
     textSize(20);
+
+    console.log("monster num",gMonsterList.length);
 
     //キーボードによる処理
     //nはモンスターのステータス変更
@@ -162,15 +248,15 @@ function draw() {
       if (key == "a") {
         console.log("a");
         //monster listのステータスを変える
-        for (let i = 0; i < gMonsterList.length; ++i) {
-          gMonsterList[i].status = Monster_Status.Atacking;
+        for (var monster of gMonsterList) {
+          monster.status = Monster_Status.Atacking;
         }   
       }
       if (key == "d") {
         console.log("d");
         //monster listのステータスを変える
-        for (let i = 0; i < gMonsterList.length; ++i) {
-          gMonsterList[i].status = Monster_Status.Dead;
+        for (var monster of gMonsterList) {
+          monster.status = Monster_Status.Dead;
         }   
       }
       //マジックの生成
@@ -194,29 +280,29 @@ function draw() {
 
     let keys =gMessageList.getKeyList();
     //console.log("keys",keys);
-    for (let i = 0; i < keys.length; ++i) {
-      let ou = gMessageList.parseKey(keys[i]);
+    for (var k of keys) {
+      let ou = gMessageList.parseKey(k);
       let message = gMessageList.getMessage(ou[0],ou[1]);
       //console.log("message",message)
-      text(keys[i]+" "+message, 10, 10+10*i);
+      text(k+" "+message, 10, 10+10*i);
       if(gMessageList.isCompleted(message)){
         gMessageList.deleteMessage(ou[0],ou[1]);
       }
     }
 
     //モンスターの表示
-    for (let i = 0; i < gMonsterList.length; ++i) {
-      gMonsterList[i].draw();
+    for (var monster of gMonsterList) {
+      monster.draw();
     }
 
     //プレーヤーの表示
-    for (let i = 0; i < gPlayerList.length; ++i) {
-      gPlayerList[i].draw();
+    for (var player of gPlayerList) {
+      player.draw();
     }
 
     //マジックの表示
-    for (let i = 0; i < gMagicList.length; ++i) {
-      gMagicList[i].draw();     
+    for (var magic of gMagicList) {
+      magic.draw();     
     }
     //属性がNoneものものは削除する
     gMagicList = gMagicList.filter(n => n.status !== Magic_Status.None);
@@ -224,33 +310,8 @@ function draw() {
     //console.log("magiclength=",gMagicList.length, "monster length=",gMonsterList.length);
     
     //当たり判定確認
-    let dist = 30;
-    let tdist =0;
-    for(var magic of gMagicList){
-      for(var monster of gMonsterList){
-        //monsterがNone状態なら何も行わない。
-        if(monster.status == Monster_Status.None){
-          continue;
-        }
+    checkHit();
 
-        tdist = Math.sqrt((magic.x-monster.x)**2+(magic.y-monster.y)**2);
-        //console.log("tdist=",tdist);
-        if( tdist < dist && magic.status!=Magic_Status.Hit && monster.status!=Monster_Status.Atacked){
-          magic.changeStatus(Magic_Status.Hit);
-          monster.changeStatus(Monster_Status.Atacked);
-          monster.hp -= magic.power;
-          if(monster.hp<=0){
-            monster.hp = 0;
-            monster.changeStatus(Monster_Status.Dead);
-          }
-
-          for(var player of gPlayerList){
-            if(magic.oid == player.oid){
-              player.point+=magic.power;
-              console.log("point=", player.point, "power=",magic.power);
-            }
-          }
-        }
-      }
-    }
+    //モンスターを召喚する。
+    callMonster();
  }

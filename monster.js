@@ -25,18 +25,40 @@ class Monster{
         this.z=0;
         this.scale=1;
         this.angle=0;
-        this.img=null;
         this.kind=Monster_Kind.A;
         this.hp =Monster_HP; 
         this.status = Monster_Status.None;
-        this.prestatus = Monster_Status.None;
         this.imgDict = {};
         this.img = null;
         this.preImgTime = Date.now(); //画像切り替えに用いる時刻
         this.preStatusTime = Date.now(); //ステータス切り替えに用いる時刻
-        
         this.imgIndex=0;
+        this.preTime = 0; //draw 更新前の時間
+        this.uid=0; //対応するユニット番号
     }
+
+    //マジックを複製する。
+    clone() {
+        //もう少し、格好いいやり方あると思います。
+        var clone = new Monster();
+        //コピーが必要なものだけコピーする。
+        clone.x = this.x;
+        clone.y = this.y;
+        clone.z = this.z;
+        clone.scale = this.scale;
+        clone.angle = this.angle;
+        clone.kind=this.kind;
+        clone.hp =this.hp; 
+        clone.status = this.status;
+        clone.imgDict = this.imgDict;
+        clone.preImgTime = Date.now();
+        this.preStatusTime = Date.now();    
+        clone.imgIndex = this.imgIndex;
+        clone.preTime = Date.now();  
+        clone.uid = this.uid;
+        return clone;
+    }
+
     //let img=null;
     setImage(mstatus, img)
     {
@@ -90,7 +112,7 @@ class Monster{
         }
 
         //状態の更新 Atackedは一定時刻が経ったら解除する
-        if(this.status==Monster_Status.Atacked && Date.now()-this.preStatusTime > 1000){
+        if(this.status==Monster_Status.Atacked && Date.now()-this.preStatusTime > 500){
             this.changeStatus(Monster_Status.Normal);
         }
 
