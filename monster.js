@@ -73,9 +73,9 @@ class Monster{
         push();
         if(this.status==Monster_Status.Atacked){
             //攻撃されたら ぶるぶるする。
-            translate(this.x+Math.random()*20,this.y+Math.random()*20);
+            translate(this.x-timg.width/2+Math.random()*20,this.y-timg.height/2+Math.random()*20);
         }else{
-            translate(this.x,this.y);       
+            translate(this.x-timg.width/2,this.y-timg.height/2);       
         }
         rotate(this.angle);
         scale(this.scale);

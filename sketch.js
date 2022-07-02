@@ -9,7 +9,7 @@ let gMonsterList = []; //モンスターのリスト
 let gMagicTempDict = {};
 let gMagicList = [];　//マジックのリスト
 let gPlayerList = [];//プレイヤーのリスト
-let gTestPlayserID = 1; //デバック用のプレーヤID
+let gTestPlayserID = 0; //デバック用のプレーヤID
 
 //アセットの読み込み、各種情報の初期化
 function preload() {
@@ -34,6 +34,9 @@ function preload() {
   monster.setImage(Monster_Status.Atacked, [timg]);
   monster.setImage(Monster_Status.Dead, [timg]); //deadとatackedは一緒。
   monster.changeStatus(Monster_Status.Create);
+  monster.x =getTargetPos(0)[0];
+  monster.y =getTargetPos(0)[1];
+  
   //モンスターリストへの追加
   gMonsterList.push(monster);
 
@@ -132,6 +135,8 @@ function createPlayer(oid){
       gPlayerList[i].x = gMonitorSize[0]/4*i+gMonitorSize[0]/8;
       gPlayerList[i].y = gCanvasSize[1]-gMonitorSize[1];    
     }
+    //gPlayerList[0].x=500;
+    //gPlayerList[0].y=500;
   }else{
     console.log("invalid playser number.")
   }
@@ -171,7 +176,7 @@ function draw() {
       //マジックの生成
       if (key == "m") {
         console.log("m");
-        createMagic(1, 0, "FIRE");
+        createMagic(0, 0, "FIRE");
       }
       //プレイヤーの生成
       if (key == "p") {
@@ -219,7 +224,7 @@ function draw() {
     //console.log("magiclength=",gMagicList.length, "monster length=",gMonsterList.length);
     
     //当たり判定確認
-    let dist = 100;
+    let dist = 30;
     let tdist =0;
     for(var magic of gMagicList){
       for(var monster of gMonsterList){
@@ -229,7 +234,7 @@ function draw() {
         }
 
         tdist = Math.sqrt((magic.x-monster.x)**2+(magic.y-monster.y)**2);
-        console.log("tdist=",tdist);
+        //console.log("tdist=",tdist);
         if( tdist < dist && magic.status!=Magic_Status.Hit && monster.status!=Monster_Status.Atacked){
           magic.changeStatus(Magic_Status.Hit);
           monster.changeStatus(Monster_Status.Atacked);

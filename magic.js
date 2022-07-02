@@ -84,8 +84,9 @@ class Magic{
 
     //速度を設定する。
     setVelocity(sPos, ePos, scale){
-        this.velo[0]= scale*Math.sqrt((ePos[0] - sPos[0])**2)/Math.sqrt((ePos[0]-sPos[0])**2+(ePos[1]-sPos[1])**2);
-        this.velo[1]= scale*Math.sqrt((ePos[1] - sPos[1])**2)/Math.sqrt((ePos[0]-sPos[0])**2+(ePos[1]-sPos[1])**2);
+        this.velo[0]= (ePos[0] - sPos[0])/Math.sqrt((ePos[0]-sPos[0])**2+(ePos[1]-sPos[1])**2)*scale;
+        this.velo[1]= (ePos[1] - sPos[1])/Math.sqrt((ePos[0]-sPos[0])**2+(ePos[1]-sPos[1])**2)*scale;
+        console.log("s ",sPos, " e ",ePos, " velo ", this.velo);
     }
    
     setImage(mstatus, img)
@@ -134,7 +135,7 @@ class Magic{
         push();
         //ヒットの時だけ、ランダム動作
         if(this.status==Magic_Status.Hit){
-            translate(this.x+Math.random()*20,this.y+Math.random()*20);
+            translate(this.x-timg.width/2+Math.random()*20,this.y-timg.height/2+Math.random()*20);
         }else{
             translate(this.x-timg.width/2,this.y-timg.height/2);
         }
@@ -145,8 +146,8 @@ class Magic{
 
         //属性の更新
         //Normal,Hitの場合には、移動します。
-        this.x = this.x - this.velo[0]*(Date.now()-this.preTime)/1000;
-        this.y = this.y - this.velo[1]*(Date.now()-this.preTime)/1000;
+        this.x = this.x + this.velo[0]*(Date.now()-this.preTime)/1000.0;
+        this.y = this.y + this.velo[1]*(Date.now()-this.preTime)/1000.0;
 
         //画面のY方向の外に近くなったら消える
         if(this.y < 100 && !(this.status == Magic_Status.End)){
