@@ -10,7 +10,15 @@ let gMonsterCallTime = 0;
 let gMagicLibDict = {};
 let gMagicList = [];　//マジックのリスト
 let gPlayerList = [];//プレイヤーのリスト
-let gTestPlayserID = 0; //デバック用のプレーヤID
+
+//デバック用
+let gTestFg = true;
+let gTestOid = 0;
+let gTestUid = 0;
+let gTestMessageList = ["auau","iuiu"];
+let gTestMessageIndex = 0;
+var Test_Mode = {Oid:1, Uid:2, Message:3};
+let gTestMode = Test_Mode.Oid;
 
 //アセットの読み込み、各種情報の初期化
 function preload() {
@@ -127,6 +135,13 @@ function createMagic(oid, uid, message){
 
 //プレーヤーの作成
 function createPlayer(oid){
+  //既に同じ番号のプレイヤーがいたら作成しない。
+  let result = gPlayerList.filter(f => f.oid == oid);
+  if(result.length>0){
+    console.log("createPlayer oid exist.", oid);
+    return;
+  }
+  
   var player = new Player();
   player.oid = oid;
   gPlayerList.push(player);
@@ -238,53 +253,75 @@ function draw() {
     //キーボードによる処理
     //nはモンスターのステータス変更
     if (keyIsPressed==true){
-      if(key == "n") {
-        console.log("n");
-        //monster listのステータスを変える
-        for (let i = 0; i < gMonsterList.length; ++i) {
-          gMonsterList[i].status = Monster_Status.Normal;
-        }   
+      //マジックの生成
+      if (keyCode === RIGHT_ARROW) {
+        console.log("right");
+        if(gTestMode == Test_Mode.Oid){
+          gTestOid+=1;
+          if(gTestOid>3){
+            gTestOid=3;
+          }
+        }
+        if(gTestMode == Test_Mode.Uid){
+          gTestUid+=1;
+          if(gTestUid>3){
+            gTestUid=3;
+          }  
+        }
+        if(gTestMode == Test_Mode.Message){
+          gTestMessageIndex+=1;
+          if(gTestMessageList.length<=gTestMessageIndex){
+            gTestMessageIndex=gTestMessageList.length-1;
+          }  
+        }
       }
-      if (key == "a") {
-        console.log("a");
-        //monster listのステータスを変える
-        for (var monster of gMonsterList) {
-          monster.status = Monster_Status.Atacking;
-        }   
-      }
-      if (key == "d") {
-        console.log("d");
-        //monster listのステータスを変える
-        for (var monster of gMonsterList) {
-          monster.status = Monster_Status.Dead;
-        }   
+      if (keyCode === LEFT_ARROW) {
+        if(gTestMode == Test_Mode.Oid){
+          gTestOid-=1;
+          if(gTestOid<0){
+            gTestOid=0;
+          }
+        }
+        if(gTestMode == Test_Mode.Uid){
+          gTestUid-=1;
+          if(gTestUid<0){
+            gTestUid=0;
+          }  
+        }
+        if(gTestMode == Test_Mode.Message){
+          gTestMessageIndex-=1;
+          if(gTestMessageIndex<0){
+            gTestMessageIndex=0;
+          }  
+        }
+        console.log("left");
+        //createMagic(0, 0, "FIRE");
       }
       //マジックの生成
-      if (key == "0") {
-        console.log("m");
-        createMagic(0, 0, "FIRE");
+      if (keyCode == RETURN) {
+        console.log("return");
+        createPlayer(gTestOid);
+        createMagic(gTestOid, gTestUid, gTestMessageList[gTestMessageIndex]);
+        //var player = gPlayerList.filter(p => p.oid == gTestOid);
+        for(let p of gPlayerList){
+          if(p.oid == gTestOid){
+            p.message = gTestMessageList[gTestMessageIndex];
+            console.log("player", p, p.message);
+          }
+        }
+        
       }
-      //マジックの生成
-      if (key == "1") {
-        console.log("m");
-        createMagic(0, 1, "FIRE");
+      if (key == "o") {
+        gTestMode = Test_Mode.Oid;
       }
-      //マジックの生成
-      if (key == "2") {
-        console.log("m");
-        createMagic(0, 2, "FIRE");
+      if (key == "u") {
+        gTestMode = Test_Mode.Uid;
       }
-      //マジックの生成
-      if (key == "3") {
-        console.log("m");
-        createMagic(0, 3, "FIRE");
+      if (key == "m") {
+        gTestMode = Test_Mode.Message;
       }
-      //プレイヤーの生成
-      if (key == "p") {
-        console.log("p");
-        createPlayer(gTestPlayserID);
-        gTestPlayserID+=1;
-      }
+      
+      //sleep
       let now = Date.now();
       while(true){
         if(Date.now()-now>100){
@@ -324,6 +361,11 @@ function draw() {
     gMonsterList = gMonsterList.filter(n => n.status !== Monster_Status.None);
     //console.log("magiclength=",gMagicList.length, "monster length=",gMonsterList.length);
     
+    //デバック文の表示
+    if(gTestFg){
+      text("[Debug]\n oid="+gTestOid+" \n uid="+gTestUid+"\n message="+gTestMessageList[gTestMessageIndex], 10, 20);
+    }
+
     //当たり判定確認
     checkHit();
 
