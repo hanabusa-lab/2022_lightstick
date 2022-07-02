@@ -20,6 +20,9 @@ let gTestMessageIndex = 0;
 var Test_Mode = {Oid:1, Uid:2, Message:3};
 let gTestMode = Test_Mode.Oid;
 
+//音テスト
+let gSoundFire;
+
 //アセットの読み込み、各種情報の初期化
 function preload() {
   // Ensure the .ttf or .otf font stored in the assets directory
@@ -68,6 +71,10 @@ function preload() {
   magic.setImage(Magic_Status.Hit, [loadImage("assets/fire_hit.png")])
   magic.setImage(Magic_Status.End, [loadImage("assets/fire_end.png")])
   gMagicLibDict[Magic_Kind.Fire]=magic;
+
+  //音の読み込み
+  soundFormats('mp3', 'ogg');
+  gSoundFire = loadSound('assets/fire.mp3');
 }
 
 //画面関連の初期化
@@ -309,7 +316,7 @@ function draw() {
             console.log("player", p, p.message);
           }
         }
-        
+        gSoundFire.play();
       }
       if (key == "o") {
         gTestMode = Test_Mode.Oid;
@@ -371,4 +378,8 @@ function draw() {
 
     //モンスターを召喚する。
     callMonster();
+
+    /*if(!gSoundFire.isPlaying()){
+      gSoundFire.play();
+    }*/
  }
