@@ -260,9 +260,24 @@ function draw() {
         }   
       }
       //マジックの生成
-      if (key == "m") {
+      if (key == "0") {
         console.log("m");
         createMagic(0, 0, "FIRE");
+      }
+      //マジックの生成
+      if (key == "1") {
+        console.log("m");
+        createMagic(0, 1, "FIRE");
+      }
+      //マジックの生成
+      if (key == "2") {
+        console.log("m");
+        createMagic(0, 2, "FIRE");
+      }
+      //マジックの生成
+      if (key == "3") {
+        console.log("m");
+        createMagic(0, 3, "FIRE");
       }
       //プレイヤーの生成
       if (key == "p") {
