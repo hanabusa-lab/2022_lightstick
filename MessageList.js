@@ -46,6 +46,8 @@ class Packet {
   }
 }
 
+
+
 class MessageList {
     
     constructor(){
@@ -235,7 +237,4 @@ function testMessageList(){
   console.log(keys, keys[0]);
   let parse = messageList.parseKey(keys[0]);
   console.log("parse", parse)
-
-
-
 }

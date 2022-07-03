@@ -1,3 +1,5 @@
+//import { convertRomanToKana } from "./convertRomanToKana.js";
+
 let gCanvasSize = [1280, 1024]; //キャンバスサイズ
 let gMonitorSize = [1280, 100]; //モニターのサイズ
 let gTargetPosDict = {};//ターゲットの位置リスト
@@ -15,7 +17,7 @@ let gPlayerList = [];//プレイヤーのリスト
 let gTestFg = true;
 let gTestOid = 0;
 let gTestUid = 0;
-let gTestMessageList = ["auau","iuiu"];
+let gTestMessageList = ["honoo","auau","iuiu"];
 let gTestMessageIndex = 0;
 var Test_Mode = {Oid:1, Uid:2, Message:3};
 let gTestMode = Test_Mode.Oid;
@@ -316,7 +318,12 @@ function draw() {
             console.log("player", p, p.message);
           }
         }
-        gSoundFire.play();
+        //文字列変換
+        let voice = convertRomanToKana(gTestMessageList[gTestMessageIndex]);
+        console.log(voice);
+        //gSoundFire.play();
+        var myVoice = new p5.Speech();
+        myVoice.speak(voice);
       }
       if (key == "o") {
         gTestMode = Test_Mode.Oid;
