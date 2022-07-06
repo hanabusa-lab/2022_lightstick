@@ -257,7 +257,7 @@ function draw() {
     fill(255);
     textSize(20);
 
-    console.log("monster num",gMonsterList.length);
+    //console.log("monster num",gMonsterList.length);
 
     //キーボードによる処理
     //nはモンスターのステータス変更
@@ -344,16 +344,28 @@ function draw() {
       }    
     }
 
+    //呪文の取得処理。
     let keys =gMessageList.getKeyList();
-    //console.log("keys",keys);
+    let i=0;
     for (var k of keys) {
+      //ou配列の0番目がOperatorID, ou配列の1番目がUnitID
       let ou = gMessageList.parseKey(k);
       let message = gMessageList.getMessage(ou[0],ou[1]);
       //console.log("message",message)
-      text(k+" "+message, 10, 10+10*i);
+      text(k+" "+message, 200, 20+10*i);
+
+      //文字が改行まで届いている場合
       if(gMessageList.isCompleted(message)){
+        console.log("message completed");
+        createPlayer(ou[0]);
+        let expectedLen = gMessageList.getExpectMessageLength(ou[0], ou[1]);
+        let message = gMessageList.getMessage(ou[0],ou[1]);
+         console.log("operator=",ou[0]," unitid=",ou[1], " message=", message, " expected len=", expectedLen, " len=", message.length);
+        createMagic(ou[0], ou[1], message);
+        
         gMessageList.deleteMessage(ou[0],ou[1]);
       }
+      i++;
     }
 
     //モンスターの表示
