@@ -359,8 +359,7 @@ function draw() {
         console.log("message completed");
         let expectedLen = gMessageList.getExpectMessageLength(ou[0], ou[1]);
         let message = gMessageList.getMessage(ou[0],ou[1]);
-        //messageには、改行が含まれているため、長さを取得する際には、改行分を減らす。
-        console.log("operator=",ou[0]," unitid=",ou[1], " message=", message, " expected len=", expectedLen, " len=", message.length-1);
+        console.log("operator=",ou[0]," unitid=",ou[1], " message=", message, " expected len=", expectedLen, " len=", message.length);
         createPlayer(ou[0]);
         createMagic(ou[0], ou[1], message);
         //呪文を発動したら、改行までのメッセージを削除する。

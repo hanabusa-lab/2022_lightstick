@@ -146,7 +146,7 @@ class MessageList {
         //改行がない場合には、先頭に文字長さがあり。
         length = value.slice(0, epos);
       }
-      return length;
+      return parseInt(length);
     }
 
     //メッセージが改行まで完結しているかを確認する。
