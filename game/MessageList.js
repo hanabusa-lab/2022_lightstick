@@ -61,8 +61,8 @@ class MessageList {
       
       if(this.map.has(key)){
         let value = this.map.get(key)
-        //前の値が改行で、本言葉が新しい文字なら、文字数を追加する。
-        if(value.slice(-1)=='\n'){
+        //前の値が改行、もしくは、value自体がからの場合には、文字数を追加する。
+        if(value.slice(-1)=='\n' || value.length == 0){
           this.map.set(key, value+packet.length+":"+packet.data);
         }else
           this.map.set(key, value+packet.data);    
@@ -173,7 +173,7 @@ class MessageList {
         if(value.indexOf('\n')>0){
           //console.log("deleteMessage index", value.indexOf('\n'))
           let vlength =value.length;
-          value = value.slice(value.indexOf('\n'), vlength);
+          value = value.slice(value.indexOf('\n')+1, vlength);
           //console.log("deleteMessage value", value, "end")
      
           this.map.set(key, value);

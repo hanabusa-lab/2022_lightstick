@@ -344,7 +344,7 @@ function draw() {
       }    
     }
 
-    //呪文の取得処理。
+    //呪文の取得処理
     let keys =gMessageList.getKeyList();
     let i=0;
     for (var k of keys) {
@@ -352,17 +352,18 @@ function draw() {
       let ou = gMessageList.parseKey(k);
       let message = gMessageList.getMessage(ou[0],ou[1]);
       //console.log("message",message)
-      text(k+" "+message, 200, 20+10*i);
+      text(k+" "+message, 300, 20+10*i);
 
       //文字が改行まで届いている場合
       if(gMessageList.isCompleted(message)){
         console.log("message completed");
-        createPlayer(ou[0]);
         let expectedLen = gMessageList.getExpectMessageLength(ou[0], ou[1]);
         let message = gMessageList.getMessage(ou[0],ou[1]);
-         console.log("operator=",ou[0]," unitid=",ou[1], " message=", message, " expected len=", expectedLen, " len=", message.length);
+        //messageには、改行が含まれているため、長さを取得する際には、改行分を減らす。
+        console.log("operator=",ou[0]," unitid=",ou[1], " message=", message, " expected len=", expectedLen, " len=", message.length-1);
+        createPlayer(ou[0]);
         createMagic(ou[0], ou[1], message);
-        
+        //呪文を発動したら、改行までのメッセージを削除する。
         gMessageList.deleteMessage(ou[0],ou[1]);
       }
       i++;
