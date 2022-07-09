@@ -1,7 +1,7 @@
 //モンスターの種類
 var Monster_Kind = {
-    Ghost : 1,
-    Dragon : 2,
+    Ghost : 0,
+    Dragon : 1,
 };
 
 //モンスターのHP
@@ -27,6 +27,7 @@ class Monster{
         this.angle=0;
         this.kind=Monster_Kind.A;
         this.hp =Monster_HP; 
+        this.hpMax = this.hp;
         this.status = Monster_Status.None;
         this.imgDict = {};
         this.img = null;
@@ -49,6 +50,7 @@ class Monster{
         clone.angle = this.angle;
         clone.kind=this.kind;
         clone.hp =this.hp; 
+        clone.hpMax =this.hpMax; 
         clone.status = this.status;
         clone.imgDict = this.imgDict;
         clone.preImgTime = Date.now();
@@ -102,8 +104,9 @@ class Monster{
         rotate(this.angle);
         scale(this.scale);
         image(timg,0,0);
-        fill(122);
-        text("HP:"+this.hp,20,20);      
+        fill(255, 255, 0);
+        // text("HP:"+this.hp,20,20); 
+        rect(30, 0, (this.hp)*2, 20)     
         pop();
 
         //状態の更新 createは一定時刻が経ったら解除する
