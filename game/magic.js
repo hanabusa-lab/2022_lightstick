@@ -16,7 +16,7 @@ var Magic_Speed = {
 
 
 //マジックのPower
-var Magic_Power = 25;
+var Magic_Power = 50;
 
 //マジックのステータス
 var Magic_Status = {

@@ -1,6 +1,6 @@
 //import { convertRomanToKana } from "./convertRomanToKana.js";
 
-let gCanvasSize = [1600, 900]; //キャンバスサイズ
+let gCanvasSize = [1600, 1200]; //キャンバスサイズ
 let gMonitorSize = [1600, 100]; //モニターのサイズ
 let gTargetPosDict = {};//ターゲットの位置リスト
 let gMonsterLibDict = {}; //モンスターライブラリのリスト
@@ -24,6 +24,9 @@ let gTestMode = Test_Mode.Oid;
 
 //音テスト
 let gSoundFire;
+
+let gBackImg;
+let gBackPointImg;
 
 //アセットの読み込み、各種情報の初期化
 function preload() {
@@ -98,6 +101,8 @@ function preload() {
   magic.setImage(Magic_Status.End, [loadImage("assets/wood_create.png")])
   gMagicLibDict[Magic_Kind.Wood] = magic;
 
+  gBackImg = loadImage('assets/background.png');
+  gBackPointImg = loadImage('assets/player_point_background.png');
 
   //音の読み込み
   soundFormats('mp3', 'ogg');
@@ -134,7 +139,7 @@ function getTargetPos(uid) {
 
   var gain = 100;
   var biasx = 100/gain;
-  var biasy = 400/gain;
+  var biasy = 200/gain;
   var minX = 0 + biasx;
   var maxX = gCanvasSize[0]/gain - biasx;
   var minY = 0 + biasy;
@@ -225,17 +230,17 @@ function createPlayer(oid) {
       // gPlayerList[i].x = gMonitorSize[0] / 4 * i + gMonitorSize[0] / 8;
       // gPlayerList[i].y = gCanvasSize[1] - gMonitorSize[1];
       if(i == 0){
-        gPlayerList[i].x = 0 + biasx;
+        gPlayerList[i].x = 0 + biasx + 50;
         gPlayerList[i].y = 0 + biasy;
       }else if(i == 1){
         gPlayerList[i].x = gCanvasSize[0] - biasx;
         gPlayerList[i].y = 0 + biasy;
       }else if(i == 2){
-        gPlayerList[i].x = 0 + biasx;
-        gPlayerList[i].y = gCanvasSize[1] - biasy;
+        gPlayerList[i].x = 0 + biasx + 50;
+        gPlayerList[i].y = gCanvasSize[1] - biasy - 80;
       }else if(i == 3){
         gPlayerList[i].x = gCanvasSize[0] - biasx;
-        gPlayerList[i].y = gCanvasSize[1] - biasy;
+        gPlayerList[i].y = gCanvasSize[1] - biasy - 80;
       }
     }
     //gPlayerList[0].x=500;
@@ -271,7 +276,7 @@ function checkHit() {
 
         for (var player of gPlayerList) {
           if (magic.oid == player.oid) {
-            player.point += magic.power;
+            player.point += magic.power/10;
             console.log("point=", player.point, "power=", magic.power);
           }
         }
@@ -347,6 +352,11 @@ function draw() {
   background(0);
   fill(255);
   textSize(20);
+  image(gBackImg, 0, 0);
+  
+  for(let i=0; i<4; i++){
+    createPlayer(i);
+  }
 
   //console.log("monster num",gMonsterList.length);
 
@@ -478,8 +488,9 @@ function draw() {
       for (let j = 0; j < 3; j++) {
         if (magicSuccess[j] > 0) {
           for (let i = 0; i < magicSuccess[j]; i++) {
-            createPlayer(ou[0]);
-            createMagic(ou[0], ou[1], message);
+            // createPlayer(ou[0]);
+            createPlayer(ou[1]);
+            createMagic(ou[1], ou[1], message);
             console.log("magic" + str(j) + " success: " + str(i) + '\n');
           }
         } else {
@@ -498,10 +509,10 @@ function draw() {
     monster.draw();
   }
 
-  //プレーヤーの表示
-  for (var player of gPlayerList) {
-    player.draw();
-  }
+  //プレーヤーの表示→表示順番のため下部に移動
+//  for (var player of gPlayerList) {
+//    player.draw();
+//  }
 
   //マジックの表示
   for (var magic of gMagicList) {
@@ -522,6 +533,12 @@ function draw() {
 
   //モンスターを召喚する。
   callMonster();
+
+  // プレイヤーポイント・メッセージ表示枠を表示、モンスターよりも上に表示するためにcallMonster()よりも下に書く
+  image(gBackPointImg, 0, 0);
+  for (var player of gPlayerList) {
+    player.draw();
+  }
 
   /*if(!gSoundFire.isPlaying()){
     gSoundFire.play();
