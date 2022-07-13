@@ -142,24 +142,29 @@ class Magic {
         let r = 255;
         let g = 255;
         let b = 255;
+        // let font = gFontFire;
 
-        if(this.kind == Magic_Kind.Fire){
+        if (this.kind == Magic_Kind.Fire) {
             r = 255;
             g = 0;
             b = 0;
-        }else if(this.kind == Magic_Kind.Water){
+            // textFont(font);
+            textFont(gFontSystem);
+        } else if (this.kind == Magic_Kind.Water) {
             r = 0;
             g = 0;
             b = 255;
-        }else if(this.kind == Magic_Kind.Wood){
+            textFont(gFontSystem);
+        } else if (this.kind == Magic_Kind.Wood) {
             r = 0;
             g = 255;
             b = 0;
+            textFont(gFontSystem);
         }
 
         fill(r, g, b);
         textSize(80);
-        text(convertRomanToKana(this.message), 30, 0);
+        text(convertRomanToKana(this.message), 300, 100);
         pop();
 
         //属性の更新

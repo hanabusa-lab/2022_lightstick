@@ -28,6 +28,13 @@ let gSoundFire;
 let gBackImg;
 let gBackPointImg;
 
+let gFontFire;
+let gFontWater;
+let gFontWood;
+let gFontSystem;
+
+
+
 //アセットの読み込み、各種情報の初期化
 function preload() {
   // Ensure the .ttf or .otf font stored in the assets directory
@@ -80,7 +87,7 @@ function preload() {
   magic.setImage(Magic_Status.Hit, [loadImage("assets/fire_hit.png")])
   magic.setImage(Magic_Status.End, [loadImage("assets/fire_end.png")])
   gMagicLibDict[Magic_Kind.Fire] = magic;
- 
+
 
   //水
   magic = new Magic();
@@ -107,6 +114,14 @@ function preload() {
   //音の読み込み
   soundFormats('mp3', 'ogg');
   gSoundFire = loadSound('assets/fire.mp3');
+
+
+  // gFontFire = loadFont('assets/SourceSansPro-Regular.otf');
+  // gFontWater = loadFont('assets/SourceSansPro-Regular.otf');
+  // gFontWood = loadFont('assets/SourceSansPro-Regular.otf');
+  gFontSystem = loadFont('assets/IoEI.ttf');
+  //   song = loadSound('assets/lucky_dragons_-_power_melody.mp3');
+
 }
 
 //画面関連の初期化
@@ -138,12 +153,12 @@ function getTargetPos(uid) {
   // return gTargetPosDict[posRamdomX];
 
   var gain = 100;
-  var biasx = 100/gain;
-  var biasy = 200/gain;
+  var biasx = 100 / gain;
+  var biasy = 200 / gain;
   var minX = 0 + biasx;
-  var maxX = gCanvasSize[0]/gain - biasx;
+  var maxX = gCanvasSize[0] / gain - biasx;
   var minY = 0 + biasy;
-  var maxY = gCanvasSize[1]/gain - biasy;
+  var maxY = gCanvasSize[1] / gain - biasy;
 
   var posRamdomX = (Math.floor(Math.random() * (maxX + 1 - minX)) + minX) * gain;
   var posRamdomY = (Math.floor(Math.random() * (maxY + 1 - minY)) + minY) * gain;
@@ -229,16 +244,16 @@ function createPlayer(oid) {
     for (var i = 0; i < gPlayerList.length; i++) {
       // gPlayerList[i].x = gMonitorSize[0] / 4 * i + gMonitorSize[0] / 8;
       // gPlayerList[i].y = gCanvasSize[1] - gMonitorSize[1];
-      if(i == 0){
+      if (i == 0) {
         gPlayerList[i].x = 0 + biasx + 50;
         gPlayerList[i].y = 0 + biasy;
-      }else if(i == 1){
+      } else if (i == 1) {
         gPlayerList[i].x = gCanvasSize[0] - biasx;
         gPlayerList[i].y = 0 + biasy;
-      }else if(i == 2){
+      } else if (i == 2) {
         gPlayerList[i].x = 0 + biasx + 50;
         gPlayerList[i].y = gCanvasSize[1] - biasy - 80;
-      }else if(i == 3){
+      } else if (i == 3) {
         gPlayerList[i].x = gCanvasSize[0] - biasx;
         gPlayerList[i].y = gCanvasSize[1] - biasy - 80;
       }
@@ -276,7 +291,7 @@ function checkHit() {
 
         for (var player of gPlayerList) {
           if (magic.oid == player.oid) {
-            player.point += magic.power/10;
+            player.point += magic.power / 10;
             console.log("point=", player.point, "power=", magic.power);
           }
         }
@@ -304,12 +319,12 @@ function callMonster() {
   let k = 0;
   var randVal = (Math.floor(Math.random() * (100 + 1 - 0)) + 0);
   // let k = Object.keys(gMonsterLibDict)[Math.floor(Math.random() * Object.keys(gMonsterLibDict).length)];
-  if (randVal > 10){
+  if (randVal > 10) {
     k = 0;
-  }else{
+  } else {
     k = 1;
   }
-  
+
   //コピーをする。
   let monster = gMonsterLibDict[k].clone();
 
@@ -339,11 +354,11 @@ function callMonster() {
   gMonsterCallTime = Date.now();
 }
 
-function resetScore(){
+function resetScore() {
   for (var player of gPlayerList) {
     player.point = 0;
     console.log("Score reset");
-  }  
+  }
 }
 
 //描画処理
@@ -353,8 +368,8 @@ function draw() {
   fill(255);
   textSize(20);
   image(gBackImg, 0, 0);
-  
-  for(let i=0; i<4; i++){
+
+  for (let i = 0; i < 4; i++) {
     createPlayer(i);
   }
 
@@ -441,7 +456,7 @@ function draw() {
       console.log(voice);
       //gSoundFire.play();
       var myVoice = new p5.Speech();
-      myVoice.speak(voice);
+      // myVoice.speak(voice);
 
 
     }
@@ -480,7 +495,7 @@ function draw() {
     //文字が改行まで届いている場合
     if (gMessageList.isCompleted(message)) {
       console.log("message completed");
-      
+
       let expectedLen = gMessageList.getExpectMessageLength(ou[0], ou[1]);
       let message = gMessageList.getMessage(ou[0], ou[1]);
       console.log("operator=", ou[0], " unitid=", ou[1], " message=", message, " expected len=", expectedLen, " len=", message.length);
@@ -510,9 +525,9 @@ function draw() {
   }
 
   //プレーヤーの表示→表示順番のため下部に移動
-//  for (var player of gPlayerList) {
-//    player.draw();
-//  }
+  //  for (var player of gPlayerList) {
+  //    player.draw();
+  //  }
 
   //マジックの表示
   for (var magic of gMagicList) {
