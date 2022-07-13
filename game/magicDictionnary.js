@@ -4,10 +4,36 @@ var fireDictionary = [
     'explotion',
     'hi',
     'honoo', 'hono',
-    'kazi',
+    'kazi','kasai',
     'kaennhousya', 'kaenhousya',
     'daimonnzi', 'daimonzi',
-    'ekusupuro-jonn','ekusupuro-jonn' 
+    'ekusupuro-jonn','ekusupuro-jonn' ,
+    'kaenn','kaenn',
+    'furea','syouen',
+    'bakuen','netu',
+    'sekinetu','homura',
+    'nennsyou','kagaribi',
+    'kaennsennpu','kaenndama',
+    'kaennboku','suika',
+    'fuurinnkazan',
+    'yamakazi',
+    'hinoumi',
+    'hinomoto',
+    'hinokuruma',
+    'hinotori',
+    'hinoko',
+    'hibana',
+    'kagiroi',
+    'hizeme',
+    'himaturi',
+    'kazan',
+    'hinawazyuu',
+    'kanetu',
+    'kayaku',
+    'hiasobi',
+    'karoku',
+    'karinn',
+    'kototu'
 
 ]
 
@@ -20,11 +46,29 @@ var waterDictionary = [
     'daikouzui',
     'nettou',
     'reitoubi-mu',
-    'naminori',
+    'naminori','nami',
     'takinobori',
     'fubuki',
     'arashi',
-    'saigai'
+    'saigai',
+    'teppoumizu',
+    'suiun',
+    'suika',//水火
+    'suigou',
+    'suiun',
+    'muzube',
+    'suigetu',
+    'kawa','kasen',
+    'umi',
+    'kigasu','mokugasu',
+    'suiatu',
+    'suii',
+    'suitou',
+    'mizukemuri',
+    'mizuoto',
+    'mizusimo',
+    'mizumawari',
+    'suigai'
 ]
 
 var woodDictionary =[
@@ -33,7 +77,26 @@ var woodDictionary =[
     'hayashi',
     'mori',
     'arashi',
-    'saigai'
+    'saigai',
+    'kaennboku',
+    'suika',//スイカ
+    'fuurinnkazan',
+    'sinnrabannsyou',
+    'bokuzin',
+    'mokugyo',
+    'bokutou','sinai',
+    'mokuzou',
+    'hasi',
+    'sougen',
+    'yamakazi',
+    'kigasu','mokugasu',
+    'koppamizin',
+    'kokage',
+    'kuwomitemoriwomizu',
+    'kyuuri',
+    'komorebi',
+    'mokkan',
+    'suitou'
 ]
 
 
