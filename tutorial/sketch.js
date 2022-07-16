@@ -576,19 +576,49 @@ function draw() {
       let expectedLen = gMessageList.getExpectMessageLength(ou[0], ou[1]);
       let message = gMessageList.getMessage(ou[0], ou[1]);
       console.log("operator=", ou[0], " unitid=", ou[1], " message=", message, " expected len=", expectedLen, " len=", message.length);
-      let magicSuccess = searchMagicDctinary(message);
-      for (let j = 0; j < 3; j++) {
-        if (magicSuccess[j] > 0) {
-          for (let i = 0; i < magicSuccess[j]; i++) {
-            // createPlayer(ou[0]);
-            createPlayer(ou[1]);
-            createMagic(ou[1], ou[1], message);
-            console.log("magic" + str(j) + " success: " + str(i) + '\n');
-          }
-        } else {
-          console.log("magic" + str(j) + " fail\n");
-        }
+      message = message.toLowerCase();
+      message = message.replace(/\r?\n/g, '');
+      messageDisplay = message;
+
+
+
+      var speak = new SpeechSynthesisUtterance();
+
+      var rateRamdom = 1;//Math.random() * 1;
+      var ratePitch = 1; Math.random() * 1;
+      speak.text = messageDisplay;
+      speak.rate = rateRamdom;   // 読み上げ速度 0.1-10 初期値:1 (倍速なら2, 半分の倍速なら0.5, )
+      speak.pitch = ratePitch;  // 声の高さ 0-2 初期値:1(0で女性の声)
+
+      speak.lang = 'ja-JP'; //(日本語:ja-JP, アメリカ英語:en-US, イギリス英語:en-GB, 中国語:zh-CN, 韓国語:ko-KR)
+      // speak.lang = 'en-GB'; //(日本語:ja-JP, アメリカ英語:en-US, イギリス英語:en-GB, 中国語:zh-CN, 韓国語:ko-KR)
+
+      if (ou[1] == 0) {
+        var voice = speechSynthesis.getVoices().find(function (voice) {
+          return voice.name === 'Microsoft Ayumi - Japanese (Japan)';
+        });
+      } else if (ou[1] == 1) {
+        var voice = speechSynthesis.getVoices().find(function (voice) {
+          return voice.name === 'Google 日本語';
+        });
+      } else if (ou[1] == 2) {
+        var voice = speechSynthesis.getVoices().find(function (voice) {
+          return voice.name === 'Google 粤語（香港）';
+        });
+      } else {
+        var voice = speechSynthesis.getVoices().find(function (voice) {
+          return voice.name === 'Microsoft Ichiro - Japanese (Japan)';
+        });
       }
+
+
+      // 取得できた場合のみ適用する
+      if (voice) {
+        speak.voice = voice;
+      }
+      speechSynthesis.speak(speak);
+
+      message0 = '';
 
       //呪文を発動したら、改行までのメッセージを削除する。
       gMessageList.deleteMessage(ou[0], ou[1]);

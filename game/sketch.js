@@ -32,6 +32,7 @@ let gFontFire;
 let gFontWater;
 let gFontWood;
 let gFontSystem;
+let gFontOther;
 let gFont;
 
 
@@ -192,7 +193,9 @@ function preload() {
   gFontWater = loadFont('assets/IoEI.ttf');
   gFontWood = loadFont('assets/Hiran-Kanan_wood.TTF');
   gFontSystem = loadFont('assets/IoEI.ttf');
-  gFont = [gFontFire, gFontWater, gFontWood, gFontSystem];
+  gFontOther = loadFont('assets/SourceSansPro-Regular.ttf');
+  gFont = [gFontFire, gFontWater, gFontWood, gFontSystem, gFontOther];
+
   //   song = loadSound('assets/lucky_dragons_-_power_melody.mp3');
 
 }
