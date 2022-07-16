@@ -149,17 +149,17 @@ class Magic {
             g = 0;
             b = 0;
             // textFont(font);
-            textFont(gFontSystem);
+            textFont(gFontFire);
         } else if (this.kind == Magic_Kind.Water) {
             r = 0;
             g = 0;
             b = 255;
-            textFont(gFontSystem);
+            textFont(gFontWater);
         } else if (this.kind == Magic_Kind.Wood) {
             r = 0;
             g = 255;
             b = 0;
-            textFont(gFontSystem);
+            textFont(gFontWood);
         }
 
         fill(r, g, b);

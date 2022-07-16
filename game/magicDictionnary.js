@@ -4,17 +4,17 @@ var fireDictionary = [
     'explotion',
     'hi',
     'honoo', 'hono',
-    'kazi','kasai',
+    'kazi', 'kasai',
     'kaennhousya', 'kaenhousya',
     'daimonnzi', 'daimonzi',
-    'ekusupuro-jonn','ekusupuro-jonn' ,
-    'kaenn','kaenn',
-    'furea','syouen',
-    'bakuen','netu',
-    'sekinetu','homura',
-    'nennsyou','kagaribi',
-    'kaennsennpu','kaenndama',
-    'kaennboku','suika',
+    'ekusupuro-jonn', 'ekusupuro-jonn',
+    'kaenn', 'kaenn',
+    'furea', 'syouen',
+    'bakuen', 'netu',
+    'sekinetu', 'homura',
+    'nennsyou', 'kagaribi',
+    'kaennsennpu', 'kaenndama',
+    'kaennboku', 'suika',
     'fuurinnkazan',
     'yamakazi',
     'hinoumi',
@@ -33,7 +33,8 @@ var fireDictionary = [
     'hiasobi',
     'karoku',
     'karinn',
-    'kototu'
+    'kototu',
+    '000\n'
 
 ]
 
@@ -46,7 +47,7 @@ var waterDictionary = [
     'daikouzui',
     'nettou',
     'reitoubi-mu',
-    'naminori','nami',
+    'naminori', 'nami',
     'takinobori',
     'fubuki',
     'arashi',
@@ -58,9 +59,9 @@ var waterDictionary = [
     'suiun',
     'muzube',
     'suigetu',
-    'kawa','kasen',
+    'kawa', 'kasen',
     'umi',
-    'kigasu','mokugasu',
+    'kigasu', 'mokugasu',
     'suiatu',
     'suii',
     'suitou',
@@ -71,7 +72,7 @@ var waterDictionary = [
     'suigai'
 ]
 
-var woodDictionary =[
+var woodDictionary = [
     'wood',
     'ki',
     'hayashi',
@@ -84,12 +85,12 @@ var woodDictionary =[
     'sinnrabannsyou',
     'bokuzin',
     'mokugyo',
-    'bokutou','sinai',
+    'bokutou', 'sinai',
     'mokuzou',
     'hasi',
     'sougen',
     'yamakazi',
-    'kigasu','mokugasu',
+    'kigasu', 'mokugasu',
     'koppamizin',
     'kokage',
     'kuwomitemoriwomizu',
@@ -100,24 +101,25 @@ var woodDictionary =[
 ]
 
 
-function searchMagicDctinary(message){
+function searchMagicDctinary(message) {
     let fireResult;
     let waterResult;
     let woodResult;
 
-    if ( fireDictionary.indexOf(message) != -1) {
+
+    if (fireDictionary.indexOf(message) != -1) {
         fireResult = message.length;
-    }else {
+    } else {
         fireResult = -1;
     }
-    if ( waterDictionary.indexOf(message) != -1) {
+    if (waterDictionary.indexOf(message) != -1) {
         waterResult = message.length;
-    }else {
+    } else {
         waterResult = -1;
     }
-    if ( woodDictionary.indexOf(message) != -1) {
+    if (woodDictionary.indexOf(message) != -1) {
         woodResult = message.length;
-    }else {
+    } else {
         woodResult = -1;
     }
 

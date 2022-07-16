@@ -32,6 +32,7 @@ let gFontFire;
 let gFontWater;
 let gFontWood;
 let gFontSystem;
+let gFont;
 
 
 
@@ -48,14 +49,18 @@ function preload() {
   gTargetPosDict[3] = [(gCanvasSize[0]) * 3 / 4, (gCanvasSize[1] - gMonitorSize[1]) * 3 / 4];
 
 
-  //Ghost作成
+  // 炎強モンスター
   let monster = new Monster();
-  monster.kind = Monster_Kind.Ghost;
-  let timg = loadImage("assets/rizado_create.png");
+  monster.kind = Monster_Kind.Dragon_Fire;
+  monster.hp = 200;
+  monster.hpMax = 200;
+  monster.weakMagic = Magic_Kind.Water;
+  monster.scale = 0.7;
+  let timg = loadImage("assets/monster_fire0.png");
   monster.setImage(Monster_Status.Create, [timg]); //createはnormalと一緒
-  monster.setImage(Monster_Status.Normal, [timg, loadImage("assets/rizado_create.png")]);
-  monster.setImage(Monster_Status.Atacking, [loadImage("assets/rizado_create.png")]);
-  timg = loadImage("assets/rizado_create.png");
+  monster.setImage(Monster_Status.Normal, [timg]);
+  monster.setImage(Monster_Status.Atacking, [timg]);
+  timg = loadImage("assets/monster_fire0.png");
   monster.setImage(Monster_Status.Atacked, [timg]);
   monster.setImage(Monster_Status.Dead, [timg]); //deadとatackedは一緒。
   //monster.changeStatus(Monster_Status.Create);
@@ -65,18 +70,85 @@ function preload() {
   //モンスターライブラリリストへの追加
   gMonsterLibDict[monster.kind] = monster;
 
-  //ドラゴンの作成
+  // 水強モンスター
   monster = new Monster();
-  monster.kind = Monster_Kind.Dragon;
+  monster.kind = Monster_Kind.Dragon_Water;
   monster.hp = 200;
   monster.hpMax = 200;
-  monster.setImage(Monster_Status.Create, [loadImage("assets/dragon_create.png")]);
-  monster.setImage(Monster_Status.Normal, [loadImage("assets/dragon_create.png")]);
-  monster.setImage(Monster_Status.Atacking, [loadImage("assets/dragon_create.png")]);
-  monster.setImage(Monster_Status.Atacked, [loadImage("assets/dragon_create.png")]);
-  monster.setImage(Monster_Status.Dead, [loadImage("assets/dragon_create.png")]);
+  monster.weakMagic = Magic_Kind.Water;
+  monster.scale = 0.7;
+  monster.setImage(Monster_Status.Create, [loadImage("assets/monster_water0.png")]);
+  monster.setImage(Monster_Status.Normal, [loadImage("assets/monster_water0.png")]);
+  monster.setImage(Monster_Status.Atacking, [loadImage("assets/monster_water0.png")]);
+  monster.setImage(Monster_Status.Atacked, [loadImage("assets/monster_water0.png")]);
+  monster.setImage(Monster_Status.Dead, [loadImage("assets/monster_water0.png")]);
   monster.status = Monster_Status.Normal;
   gMonsterLibDict[monster.kind] = monster;
+
+  // 木強モンスター
+  monster = new Monster();
+  monster.kind = Monster_Kind.Dragon_Wood;
+  monster.hp = 200;
+  monster.hpMax = 200;
+  monster.weakMagic = Magic_Kind.Wood;
+  monster.scale = 0.7;
+  monster.setImage(Monster_Status.Create, [loadImage("assets/monster_wood0.png")]);
+  monster.setImage(Monster_Status.Normal, [loadImage("assets/monster_wood0.png")]);
+  monster.setImage(Monster_Status.Atacking, [loadImage("assets/monster_wood0.png")]);
+  monster.setImage(Monster_Status.Atacked, [loadImage("assets/monster_wood0.png")]);
+  monster.setImage(Monster_Status.Dead, [loadImage("assets/monster_wood0.png")]);
+  monster.status = Monster_Status.Normal;
+  gMonsterLibDict[monster.kind] = monster;
+
+  // 炎弱モンスター
+  monster = new Monster();
+  monster.kind = Monster_Kind.Mob_Fire;
+  monster.weakMagic = Magic_Kind.Fire;
+  monster.scale = 0.4;
+  timg = loadImage("assets/monster_fire1.png");
+  monster.setImage(Monster_Status.Create, [timg]); //createはnormalと一緒
+  monster.setImage(Monster_Status.Normal, [timg]);
+  monster.setImage(Monster_Status.Atacking, [timg]);
+  timg = loadImage("assets/monster_fire1.png");
+  monster.setImage(Monster_Status.Atacked, [timg]);
+  monster.setImage(Monster_Status.Dead, [timg]); //deadとatackedは一緒。
+  monster.hp = 100;
+  monster.hpMax = 100;
+
+  //モンスターライブラリリストへの追加
+  gMonsterLibDict[monster.kind] = monster;
+
+  // 水弱モンスター
+  monster = new Monster();
+  monster.kind = Monster_Kind.Mob_Water;
+  monster.hp = 100;
+  monster.hpMax = 100;
+  monster.weakMagic = Magic_Kind.Water;
+  monster.scale = 0.7;
+  monster.setImage(Monster_Status.Create, [loadImage("assets/monster_water1.png")]);
+  monster.setImage(Monster_Status.Normal, [loadImage("assets/monster_water1.png")]);
+  monster.setImage(Monster_Status.Atacking, [loadImage("assets/monster_water1.png")]);
+  monster.setImage(Monster_Status.Atacked, [loadImage("assets/monster_water1.png")]);
+  monster.setImage(Monster_Status.Dead, [loadImage("assets/monster_water1.png")]);
+  monster.status = Monster_Status.Normal;
+  gMonsterLibDict[monster.kind] = monster;
+
+  // 木弱モンスター
+  monster = new Monster();
+  monster.kind = Monster_Kind.Mob_Wood;
+  monster.hp = 100;
+  monster.hpMax = 100;
+  monster.weakMagic = Magic_Kind.Wood;
+  monster.scale = 0.4;
+  monster.setImage(Monster_Status.Create, [loadImage("assets/monster_wood1.png")]);
+  monster.setImage(Monster_Status.Normal, [loadImage("assets/monster_wood1.png")]);
+  monster.setImage(Monster_Status.Atacking, [loadImage("assets/monster_wood1.png")]);
+  monster.setImage(Monster_Status.Atacked, [loadImage("assets/monster_wood1.png")]);
+  monster.setImage(Monster_Status.Dead, [loadImage("assets/monster_wood1.png")]);
+  monster.status = Monster_Status.Normal;
+  gMonsterLibDict[monster.kind] = monster;
+
+
 
   //マジックの作成。テンプレートを作成。実際のものは、これをクローンいて生成する。
   //炎
@@ -116,10 +188,11 @@ function preload() {
   gSoundFire = loadSound('assets/fire.mp3');
 
 
-  // gFontFire = loadFont('assets/SourceSansPro-Regular.otf');
-  // gFontWater = loadFont('assets/SourceSansPro-Regular.otf');
-  // gFontWood = loadFont('assets/SourceSansPro-Regular.otf');
+  gFontFire = loadFont('assets/IoEI.ttf');
+  gFontWater = loadFont('assets/IoEI.ttf');
+  gFontWood = loadFont('assets/Hiran-Kanan_wood.TTF');
   gFontSystem = loadFont('assets/IoEI.ttf');
+  gFont = [gFontFire, gFontWater, gFontWood, gFontSystem];
   //   song = loadSound('assets/lucky_dragons_-_power_melody.mp3');
 
 }
@@ -152,9 +225,9 @@ function getTargetPos(uid) {
   // console.log("posRandam=", posRamdom)
   // return gTargetPosDict[posRamdomX];
 
-  var gain = 100;
-  var biasx = 100 / gain;
-  var biasy = 200 / gain;
+  var gain = 1;
+  var biasx = 0 / gain;
+  var biasy = 0 / gain;
   var minX = 0 + biasx;
   var maxX = gCanvasSize[0] / gain - biasx;
   var minY = 0 + biasy;
@@ -164,6 +237,7 @@ function getTargetPos(uid) {
   var posRamdomY = (Math.floor(Math.random() * (maxY + 1 - minY)) + minY) * gain;
 
   return [posRamdomX, posRamdomY];
+  // return [500, 500];
 
   for (var k of Object.keys(gTargetPosDict)) {
     //console.log("uid=",uid, "key=",k);
@@ -227,7 +301,7 @@ function createPlayer(oid) {
   //既に同じ番号のプレイヤーがいたら作成しない。
   let result = gPlayerList.filter(f => f.oid == oid);
   if (result.length > 0) {
-    console.log("createPlayer oid exist.", oid);
+    //console.log("createPlayer oid exist.", oid);
     return;
   }
 
@@ -278,7 +352,7 @@ function checkHit() {
 
       tdist = Math.sqrt((magic.x - monster.x) ** 2 + (magic.y - monster.y) ** 2);
       //console.log("tdist=",tdist);
-      if (tdist < dist && magic.status != Magic_Status.Hit && monster.status != Monster_Status.Atacked && magic.kind != monster.kind) {
+      if (tdist < dist && magic.status != Magic_Status.Hit && monster.status != Monster_Status.Atacked && (magic.kind != monster.weakMagic)) {
         magic.changeStatus(Magic_Status.Hit);
         monster.changeStatus(Monster_Status.Atacked);
         monster.hp -= magic.power;
@@ -304,8 +378,8 @@ function checkHit() {
 function callMonster() {
   //時間が早かったら、もしくは、4体既にいたらモンスターを召喚しない
   //tminからtmaの間の時間で召喚する。
-  let tmin = 3;
-  let tmax = 5;
+  let tmin = 1;
+  let tmax = 2;
   if (Date.now() - gMonsterCallTime < (Math.floor(Math.random() * (tmax + 1 - tmin)) + tmin) * 1000) {
     return;
   }
@@ -319,11 +393,20 @@ function callMonster() {
   let k = 0;
   var randVal = (Math.floor(Math.random() * (100 + 1 - 0)) + 0);
   // let k = Object.keys(gMonsterLibDict)[Math.floor(Math.random() * Object.keys(gMonsterLibDict).length)];
-  if (randVal > 10) {
+  if (randVal > 90) {
     k = 0;
-  } else {
+  } else if (randVal > 80) {
     k = 1;
+  } else if (randVal > 70) {
+    k = 2;
+  } else if (randVal > 50) {
+    k = 3;
+  } else if (randVal > 30) {
+    k = 4;
+  } else {
+    k = 5;
   }
+
 
   //コピーをする。
   let monster = gMonsterLibDict[k].clone();
@@ -335,18 +418,21 @@ function callMonster() {
   }
   //existList.push('0');
   //existList.push('1');
-
-  let emptyList = Object.keys(gTargetPosDict).filter(function (s) {
-    //console.log(existList, existList.indexOf(s));
-    return existList.indexOf(s) == -1
-  })
+  /*
+    let emptyList = Object.keys(gTargetPosDict).filter(function (s) {
+      //console.log(existList, existList.indexOf(s));
+      return existList.indexOf(s) == -1
+    })
+    */
 
   //ランダムで空いている場所を選ぶ
-  let uid = parseInt(emptyList[Math.floor(Math.random() * emptyList.length)]);
+  let uid = 0;// parseInt(emptyList[Math.floor(Math.random() * emptyList.length)]);
 
   monster.uid = uid;
   monster.x = getTargetPos(uid)[0];
   monster.y = getTargetPos(uid)[1];
+  // monster.x = 500; getTargetPos(uid)[0];
+  // monster.y = 500; getTargetPos(uid)[1];
   monster.changeStatus(Monster_Status.Create);
 
   gMonsterList.push(monster);
@@ -494,11 +580,17 @@ function draw() {
 
     //文字が改行まで届いている場合
     if (gMessageList.isCompleted(message)) {
+
       console.log("message completed");
 
       let expectedLen = gMessageList.getExpectMessageLength(ou[0], ou[1]);
       let message = gMessageList.getMessage(ou[0], ou[1]);
-      console.log("operator=", ou[0], " unitid=", ou[1], " message=", message, " expected len=", expectedLen, " len=", message.length);
+      console.log("operator=", ou[0], " unitid=", ou[1], " message=", message.toLowerCase(), " expected len=", expectedLen, " len=", message.length);
+      // message.replace(/[^0-9a-z]/gi, '');
+      message = message.toLowerCase();
+      message = message.replace(/\r?\n/g, '');
+
+      console.log("operator=", ou[0], " unitid=", ou[1], " message=", message.toLowerCase(), " expected len=", expectedLen, " len=", message.length);
       let magicSuccess = searchMagicDctinary(message);
       for (let j = 0; j < 3; j++) {
         if (magicSuccess[j] > 0) {
