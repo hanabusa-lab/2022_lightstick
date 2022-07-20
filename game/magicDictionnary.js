@@ -69,7 +69,8 @@ var waterDictionary = [
     'mizuoto',
     'mizusimo',
     'mizumawari',
-    'suigai'
+    'suigai',
+    'gekiryuu'
 ]
 
 var woodDictionary = [
