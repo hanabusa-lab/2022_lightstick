@@ -98,7 +98,8 @@ var woodDictionary = [
     'kyuuri',
     'komorebi',
     'mokkan',
-    'suitou'
+    'suitou',
+    'yama'
 ]
 
 
