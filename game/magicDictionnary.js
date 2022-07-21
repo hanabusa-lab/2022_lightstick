@@ -34,6 +34,14 @@ var fireDictionary = [
     'karoku',
     'karinn',
     'kototu',
+    'matti',
+    'yougann','yougan',
+    'zyuu',
+    'aruko-rurannpu','arukoーrurannpu',
+    'rannpu','ranpu',
+    'ennzinn','enzin',
+    'huraipann','huraipan',
+    'yamakazi',//火山
     '000\n'
 
 ]
@@ -70,7 +78,19 @@ var waterDictionary = [
     'mizusimo',
     'mizumawari',
     'suigai',
-    'gekiryuu'
+    'gekiryuu',
+    'rinnkanngakkou',
+    'sakana',
+    'fish',
+    'nettaigyo',
+    'daikouzui',
+    'mizuhuusenn','mizuhuusen',
+    'reitou',
+    'kaitou',
+    'sake',
+    'same',
+    'medaka',
+    'kame'
 ]
 
 var woodDictionary = [
@@ -99,7 +119,25 @@ var woodDictionary = [
     'komorebi',
     'mokkan',
     'suitou',
-    'yama'
+    'yama',
+    'tukue',
+    'isu',
+    'kyannpufaia-',
+    'kiyannpu',
+    'rinnkaigakkou',
+    'yasai',
+    'asagao',
+    'kogarashi','kagarasi',
+    'zisinn','zishinn','zisin',
+    'yamakazi',
+    'dosyakyzure',
+    'taihuu',
+    'happa',
+    'sennpuuki',
+    'tannpopo',
+    'toumorokosi','toumorokoshi',
+    'yamakazi',//火山
+    
 ]
 
 
