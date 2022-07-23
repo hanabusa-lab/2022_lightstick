@@ -402,6 +402,9 @@ function draw() {
     if (key == "x") {
       gSpeakVoiceKind = 1;
     }
+    if (key == "c") {
+      gSpeakVoiceKind = 9;
+    }
     if (key == "r") {
       resetScore(); // プレイヤーのスコアをリセット
     }
