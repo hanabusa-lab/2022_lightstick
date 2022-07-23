@@ -35,6 +35,10 @@ let gFontSystem;
 let gFontOther;
 let gFont;
 
+let gSeAttackMagicList = [];
+let gSeMonsterList = [];
+let gBgmList = [];
+
 
 
 //アセットの読み込み、各種情報の初期化
@@ -186,7 +190,7 @@ function preload() {
 
   //音の読み込み
   soundFormats('mp3', 'ogg');
-  gSoundFire = loadSound('assets/fire.mp3');
+  // gSoundFire = loadSound('assets/fire.mp3');
 
 
   gFontFire = loadFont('assets/IoEI.ttf');
@@ -196,7 +200,13 @@ function preload() {
   gFontOther = loadFont('assets/SourceSansPro-Regular.ttf');
   gFont = [gFontFire, gFontWater, gFontWood, gFontSystem, gFontOther];
 
-  //   song = loadSound('assets/lucky_dragons_-_power_melody.mp3');
+  gSeAttackMagicList[0] = loadSound('assets/attack_sound/fireMagic1.mp3');
+  gSeAttackMagicList[1] = loadSound('assets/attack_sound/waterMagic1.mp3');
+  gSeAttackMagicList[2] = loadSound('assets/attack_sound/woodMagic1.mp3');
+  gSeMonsterList[0] = loadSound('assets/attack_sound/monsterPop.mp3');
+  gSeMonsterList[1] = loadSound('assets/attack_sound/monsterDisappear.mp3');
+  gBgmList[0] = loadSound('assets/battleSound.mp3');
+
 
 }
 
@@ -259,6 +269,7 @@ function createMagic(oid, uid, message) {
   let magicSuccess = searchMagicDctinary(message);
   for (let j = 0; j < 3; j++) {
     if (magicSuccess[j] > 0) {
+      gSeAttackMagicList[j].play();
       for (let i = 0; i < magicSuccess[j]; i = i + 1) {
         console.log("magic" + str(j) + " success: " + str(i) + '\n');
 
@@ -360,6 +371,7 @@ function checkHit() {
         monster.changeStatus(Monster_Status.Atacked);
         monster.hp -= magic.power;
         if (monster.hp <= 0) {
+          gSeMonsterList[1].play();
           monster.hp = 0;
           monster.changeStatus(Monster_Status.Dead);
           //モンスターがすぐにと登場しないように、モンスター召喚時間をセットし直す。
@@ -432,11 +444,13 @@ function callMonster() {
   let uid = 0;// parseInt(emptyList[Math.floor(Math.random() * emptyList.length)]);
 
   monster.uid = uid;
-  monster.x = getTargetPos(uid)[0]/2;
-  monster.y = getTargetPos(uid)[1]/2;
+  monster.x = getTargetPos(uid)[0] / 2;
+  monster.y = getTargetPos(uid)[1] / 2;
   // monster.x = 500; getTargetPos(uid)[0];
   // monster.y = 500; getTargetPos(uid)[1];
   monster.changeStatus(Monster_Status.Create);
+
+  gSeMonsterList[0].play();
 
   gMonsterList.push(monster);
 
@@ -458,7 +472,14 @@ function draw() {
   textSize(20);
   image(gBackImg, 0, 0);
 
-  for (let i = 0; i < 4; i++) {
+  if (gBgmList[0].isPlaying()) {
+
+  } else {
+    gBgmList[0].play();
+
+  }
+
+  for (let i = 0; i < 10; i++) {
     createPlayer(i);
   }
 
@@ -581,11 +602,11 @@ function draw() {
     //console.log("message",message)
     text(k + " " + message, 300, 20 + 10 * i);
     if (message != '') {
-    //   gDisplayedMsgList[k] = message;
-    //   gDisplayedMsgKanaList[k] = convertRomanToKana(message);
+      //   gDisplayedMsgList[k] = message;
+      //   gDisplayedMsgKanaList[k] = convertRomanToKana(message);
       gPlayerList[ou[1]].message = message;
     }
-    
+
 
     // for (var player of gPlayerList) {
     //   player.message = message;
