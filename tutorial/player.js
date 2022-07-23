@@ -17,9 +17,9 @@ class Player {
         textSize(60);
         text(this.point, 30, 10);
         textSize(60);
-        text(this.message, -200, 50);
+        // text(this.message, -200, 50);
         textSize(70);
-        text(convertRomanToKana(this.message), -200, 120);
+        // text(convertRomanToKana(this.message), -200, 120);
         pop();
 
     }

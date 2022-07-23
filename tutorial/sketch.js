@@ -37,6 +37,11 @@ let iTestKey = false;
 let message0 = '';
 let messageDisplay = '';
 
+let gDisplayedMsgList = [];
+let gDisplayedMsgKanaList = [];
+
+let gSpeakVoiceKind = 0;
+
 
 //アセットの読み込み、各種情報の初期化
 function preload() {
@@ -387,110 +392,21 @@ function draw() {
   //console.log("monster num",gMonsterList.length);
 
   //キーボードによる処理
-  //nはモンスターのステータス変更
+
   if (keyIsPressed == true) {
-    //マジックの生成
-    if (keyCode === RIGHT_ARROW) {
-      console.log("right");
-      if (gTestMode == Test_Mode.Oid) {
-        gTestOid += 1;
-        if (gTestOid > 3) {
-          gTestOid = 3;
-        }
-      }
-      if (gTestMode == Test_Mode.Uid) {
-        gTestUid += 1;
-        if (gTestUid > 3) {
-          gTestUid = 3;
-        }
-      }
-      if (gTestMode == Test_Mode.Message) {
-        gTestMessageIndex += 1;
-        if (gTestMessageList.length <= gTestMessageIndex) {
-          gTestMessageIndex = gTestMessageList.length - 1;
-        }
-      }
+
+
+    if (key == "z") {
+      gSpeakVoiceKind = 0;
     }
-    if (keyCode === LEFT_ARROW) {
-      if (gTestMode == Test_Mode.Oid) {
-        gTestOid -= 1;
-        if (gTestOid < 0) {
-          gTestOid = 0;
-        }
-      }
-      if (gTestMode == Test_Mode.Uid) {
-        gTestUid -= 1;
-        if (gTestUid < 0) {
-          gTestUid = 0;
-        }
-      }
-      if (gTestMode == Test_Mode.Message) {
-        gTestMessageIndex -= 1;
-        if (gTestMessageIndex < 0) {
-          gTestMessageIndex = 0;
-        }
-      }
-      console.log("left");
-      //createMagic(0, 0, "FIRE");
-    }
-    //マジックの生成
-    if (keyCode == RETURN) {
-      console.log("return");
-
-      let magicSuccess = searchMagicDctinary(gTestMessageList[gTestMessageIndex]);
-      for (let j = 0; j < 3; j++) {
-        if (magicSuccess[j] > 0) {
-          for (let i = 0; i < magicSuccess[j]; i++) {
-            createPlayer(gTestOid);
-            createMagic(gTestOid, gTestUid, gTestMessageList[gTestMessageIndex]);
-            console.log("magic" + str(j) + " success: " + str(i) + '\n');
-          }
-        } else {
-          console.log("magic" + str(j) + " fail\n");
-        }
-
-      }
-
-
-
-      //createPlayer(gTestOid);
-      //createMagic(gTestOid, gTestUid, gTestMessageList[gTestMessageIndex]);
-      //var player = gPlayerList.filter(p => p.oid == gTestOid);
-      for (let p of gPlayerList) {
-        if (p.oid == gTestOid) {
-          p.message = gTestMessageList[gTestMessageIndex];
-          console.log("player", p, p.message);
-        }
-      }
-      //文字列変換
-      let voice = convertRomanToKana(gTestMessageList[gTestMessageIndex]);
-      console.log(voice);
-      //gSoundFire.play();
-      var myVoice = new p5.Speech();
-      // myVoice.speak(voice);
-
-
-    }
-    if (key == "o") {
-      gTestMode = Test_Mode.Oid;
-    }
-    if (key == "u") {
-      gTestMode = Test_Mode.Uid;
-    }
-    if (key == "m") {
-      gTestMode = Test_Mode.Message;
+    if (key == "x") {
+      gSpeakVoiceKind = 1;
     }
     if (key == "r") {
       resetScore(); // プレイヤーのスコアをリセット
     }
 
-    //sleep
-    let now = Date.now();
-    while (true) {
-      if (Date.now() - now > 100) {
-        break;
-      }
-    }
+
   }
 
 
@@ -555,19 +471,101 @@ function draw() {
   }
 
   fill(0);
-  text(messageDisplay, 100, 200);
-  text(convertRomanToKana(messageDisplay), 100, 300);
+  // text(messageDisplay, 100, 200);
+  // text(convertRomanToKana(messageDisplay), 100, 300);
 
   //呪文の取得処理
   let keys = gMessageList.getKeyList();
   let i = 0;
+  textSize(40);
+
+
+
+  let msgTest = "amenboakaina aiueo ukimonikoebimooyioideiru";
+  let msgTestKana = convertRomanToKana(msgTest);
+
+
+  if (gSpeakVoiceKind == 0) {
+    fill(200);
+    textSize(100);
+    text("にほんご", 100, 300);
+    text("かんごくご", 900, 300);
+    text("ヒンドゥーご", 100, 900);
+    text("ｲﾝﾄﾞﾈｼｱご", 900, 900);
+    
+  } else if (gSpeakVoiceKind == 1) {
+    fill(200);
+    textSize(100);
+    text("えいご(US)", 100, 300);
+    text("スペインご", 900, 300);
+    text("フランスご", 100, 900);
+    text("イタリアご", 900, 900);
+    
+  } else {
+    fill(200);
+    textSize(100);
+    text("にほんご", 100, 300);
+    text("にほんご", 900, 300);
+    text("にほんご", 100, 900);
+    text("にほんご", 900, 900);
+  }
+
 
   for (var k of keys) {
     //ou配列の0番目がOperatorID, ou配列の1番目がUnitID
     let ou = gMessageList.parseKey(k);
     let message = gMessageList.getMessage(ou[0], ou[1]);
     //console.log("message",message)
-    text(k + " " + message, 300, 20 + 10 * i);
+    // ext(k + " " + message, 300, 20 + 10 * i);
+    let posx = 0;
+    let posy = 0;
+    if (ou[1] == 0) {
+      posx = 50;
+      posy = 100;
+
+    } else if (ou[1] == 1) {
+      posx = 900;
+      posy = 100;
+
+    } else if (ou[1] == 2) {
+      posx = 50;
+      posy = 700;
+
+    } else {
+      posx = 900;
+      posy = 700;
+
+    }
+
+    if (message != '') {
+      gDisplayedMsgList[k] = message;
+      gDisplayedMsgKanaList[k] = convertRomanToKana(message);
+    }
+    fill(0);
+    textSize(50);
+    let j = 1;
+    let init = 0;
+    i = 0;
+    for (i = 0; i < gDisplayedMsgList[k].length; i++) {
+      if (i > 16 * j) {
+        text(gDisplayedMsgList[k].slice(init, i), posx, posy + (j - 1) * 120);
+        j = j + 1;
+        init = i - 1;
+      }
+    }
+    text(gDisplayedMsgList[k].slice(init, i), posx, posy + (j - 1) * 120);
+
+    j = 1;
+    init = 0;
+    for (let i = 0; i < gDisplayedMsgKanaList[k].length; i++) {
+      if (i > 8 * j) {
+        text(gDisplayedMsgKanaList[k].slice(init, i), posx, posy + 60 + (j - 1) * 120);
+        j = j + 1;
+        init = i - 1;
+      }
+    }
+    text(gDisplayedMsgKanaList[k].slice(init, i), posx, posy + 60 + (j - 1) * 120);
+
 
     //文字が改行まで届いている場合
     if (gMessageList.isCompleted(message)) {
@@ -593,23 +591,61 @@ function draw() {
       speak.lang = 'ja-JP'; //(日本語:ja-JP, アメリカ英語:en-US, イギリス英語:en-GB, 中国語:zh-CN, 韓国語:ko-KR)
       // speak.lang = 'en-GB'; //(日本語:ja-JP, アメリカ英語:en-US, イギリス英語:en-GB, 中国語:zh-CN, 韓国語:ko-KR)
 
-      if (ou[1] == 0) {
-        var voice = speechSynthesis.getVoices().find(function (voice) {
-          return voice.name === 'Microsoft Ayumi - Japanese (Japan)';
-        });
-      } else if (ou[1] == 1) {
+      if (gSpeakVoiceKind == 0) {
+        fill(200);
+        textSize(100);
+        text("にほんご", 100, 300);
+        text("かんごくご", 900, 300);
+        text("ヒンドゥーご", 100, 900);
+        text("インドネシアご", 900, 900);
+        if (ou[1] == 0) {
+          var voice = speechSynthesis.getVoices().find(function (voice) {
+            return voice.name === 'Google 日本語';
+          });
+        } else if (ou[1] == 1) {
+          var voice = speechSynthesis.getVoices().find(function (voice) {
+            return voice.name === 'Google 한국의';
+          });
+        } else if (ou[1] == 2) {
+          var voice = speechSynthesis.getVoices().find(function (voice) {
+            return voice.name === 'Google हिन्दी';
+          });
+        } else {
+          var voice = speechSynthesis.getVoices().find(function (voice) {
+            return voice.name === 'Google Bahasa Indonesia';
+          });
+        }
+      } else if (gSpeakVoiceKind == 1) {
+        fill(200);
+        textSize(100);
+        text("えいご(US)", 100, 300);
+        text("スペインご", 900, 300);
+        text("フランスご", 100, 900);
+        text("イタリアご", 900, 900);
+        if (ou[1] == 0) {
+          var voice = speechSynthesis.getVoices().find(function (voice) {
+            return voice.name === 'Google US English';
+          });
+        } else if (ou[1] == 1) {
+          var voice = speechSynthesis.getVoices().find(function (voice) {
+            return voice.name === 'Google español';
+          });
+        } else if (ou[1] == 2) {
+          var voice = speechSynthesis.getVoices().find(function (voice) {
+            return voice.name === 'Google français';
+          });
+        } else {
+          var voice = speechSynthesis.getVoices().find(function (voice) {
+            return voice.name === 'Google italiano';
+          });
+        }
+      } else {
         var voice = speechSynthesis.getVoices().find(function (voice) {
           return voice.name === 'Google 日本語';
         });
-      } else if (ou[1] == 2) {
-        var voice = speechSynthesis.getVoices().find(function (voice) {
-          return voice.name === 'Google 粤語（香港）';
-        });
-      } else {
-        var voice = speechSynthesis.getVoices().find(function (voice) {
-          return voice.name === 'Microsoft Ichiro - Japanese (Japan)';
-        });
       }
+
+
 
 
       // 取得できた場合のみ適用する
@@ -650,7 +686,7 @@ function draw() {
 
   //デバック文の表示
   if (gTestFg) {
-    text("[Debug]\n oid=" + gTestOid + " \n uid=" + gTestUid + "\n message=" + gTestMessageList[gTestMessageIndex], 10, 20);
+    // text("[Debug]\n oid=" + gTestOid + " \n uid=" + gTestUid + "\n message=" + gTestMessageList[gTestMessageIndex], 10, 20);
   }
 
   //当たり判定確認
