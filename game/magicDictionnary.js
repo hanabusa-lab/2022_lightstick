@@ -42,7 +42,12 @@ var fireDictionary = [
     'ennzinn','enzin',
     'huraipann','huraipan',
     'yamakazi',//火山
-    '000\n'
+    '000\n',
+    'furo', 'ofuro',
+    'kare-',
+    'hanabi',
+    'kyanpufaiya-', 'kyannpufaiya-', 'kyanpuhpaiya-', 'kyannpuphaiya-',
+    'kyanpufaia-', 'kyannpufaia-', 'kyanpuhpaia-', 'kyannpuphaia-'
 
 ]
 
@@ -58,7 +63,7 @@ var waterDictionary = [
     'naminori', 'nami',
     'takinobori',
     'fubuki',
-    'arashi',
+    'arashi', 'arasi',
     'saigai',
     'teppoumizu',
     'suiun',
@@ -90,7 +95,29 @@ var waterDictionary = [
     'sake',
     'same',
     'medaka',
-    'kame'
+    'kame',
+    'pu-ru',
+    'furo', 'ofuro',
+    'mizuame',
+    'kingyosukui', 'kingyosukui',
+    'mizufuusenn', 'mizufuusen',
+    'mizudeppou',
+    'penki',
+    'mizugi',
+    'go-guru',
+    'umi',
+    'taiheiyou',
+    'taiesiyou',
+    'inndoyou',
+    'biwako',
+    'suke-to',
+    'kakigoori',
+    'same',
+    'syumokuzame',
+    'hannma-heddosya-ku',
+    'kame',
+
+
 ]
 
 var woodDictionary = [
@@ -98,7 +125,7 @@ var woodDictionary = [
     'ki',
     'hayashi',
     'mori',
-    'arashi',
+    'arashi', 'arasi',
     'saigai',
     'kaennboku',
     'suika',//スイカ
@@ -137,6 +164,17 @@ var woodDictionary = [
     'tannpopo',
     'toumorokosi','toumorokoshi',
     'yamakazi',//火山
+    'ha',
+    'mushi', 'musi',
+    'kikori',
+    'funka',
+    'kyanpufaiya-', 'kyannpufaiya-', 'kyanpuhpaiya-', 'kyannpuphaiya-',
+    'kyanpufaia-', 'kyannpufaia-', 'kyanpuhpaia-', 'kyannpuphaia-',
+    'sougen', 'sougenn',
+    'pikunikku', 
+    'haikinngu', 'haikingu',
+    'sakura', 
+    'hanami'
     
 ]
 
