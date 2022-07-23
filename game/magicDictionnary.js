@@ -148,17 +148,20 @@ function searchMagicDctinary(message) {
 
 
     if (fireDictionary.indexOf(message) != -1) {
-        fireResult = message.length;
+        // fireResult = convertRomanToKana(message).length;
+        fireResult = (message).length;
     } else {
         fireResult = -1;
     }
     if (waterDictionary.indexOf(message) != -1) {
-        waterResult = message.length;
+        // waterResult = convertRomanToKana(message).length;
+        waterResult = (message).length;
     } else {
         waterResult = -1;
     }
     if (woodDictionary.indexOf(message) != -1) {
-        woodResult = message.length;
+        // woodResult = convertRomanToKana(message).length;
+        woodResult = (message).length;
     } else {
         woodResult = -1;
     }

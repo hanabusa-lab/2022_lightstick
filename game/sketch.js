@@ -56,7 +56,7 @@ function preload() {
   monster.hp = 200;
   monster.hpMax = 200;
   monster.weakMagic = Magic_Kind.Water;
-  monster.scale = 0.7;
+  monster.scale = 1;
   let timg = loadImage("assets/monster_fire0.png");
   monster.setImage(Monster_Status.Create, [timg]); //createはnormalと一緒
   monster.setImage(Monster_Status.Normal, [timg]);
@@ -77,7 +77,7 @@ function preload() {
   monster.hp = 200;
   monster.hpMax = 200;
   monster.weakMagic = Magic_Kind.Water;
-  monster.scale = 0.7;
+  monster.scale = 1;
   monster.setImage(Monster_Status.Create, [loadImage("assets/monster_water0.png")]);
   monster.setImage(Monster_Status.Normal, [loadImage("assets/monster_water0.png")]);
   monster.setImage(Monster_Status.Atacking, [loadImage("assets/monster_water0.png")]);
@@ -92,7 +92,7 @@ function preload() {
   monster.hp = 200;
   monster.hpMax = 200;
   monster.weakMagic = Magic_Kind.Wood;
-  monster.scale = 0.7;
+  monster.scale = 1;
   monster.setImage(Monster_Status.Create, [loadImage("assets/monster_wood0.png")]);
   monster.setImage(Monster_Status.Normal, [loadImage("assets/monster_wood0.png")]);
   monster.setImage(Monster_Status.Atacking, [loadImage("assets/monster_wood0.png")]);
@@ -105,7 +105,7 @@ function preload() {
   monster = new Monster();
   monster.kind = Monster_Kind.Mob_Fire;
   monster.weakMagic = Magic_Kind.Fire;
-  monster.scale = 0.4;
+  monster.scale = 1;
   timg = loadImage("assets/monster_fire1.png");
   monster.setImage(Monster_Status.Create, [timg]); //createはnormalと一緒
   monster.setImage(Monster_Status.Normal, [timg]);
@@ -125,7 +125,7 @@ function preload() {
   monster.hp = 100;
   monster.hpMax = 100;
   monster.weakMagic = Magic_Kind.Water;
-  monster.scale = 0.7;
+  monster.scale = 1;
   monster.setImage(Monster_Status.Create, [loadImage("assets/monster_water1.png")]);
   monster.setImage(Monster_Status.Normal, [loadImage("assets/monster_water1.png")]);
   monster.setImage(Monster_Status.Atacking, [loadImage("assets/monster_water1.png")]);
@@ -140,7 +140,7 @@ function preload() {
   monster.hp = 100;
   monster.hpMax = 100;
   monster.weakMagic = Magic_Kind.Wood;
-  monster.scale = 0.4;
+  monster.scale = 1;
   monster.setImage(Monster_Status.Create, [loadImage("assets/monster_wood1.png")]);
   monster.setImage(Monster_Status.Normal, [loadImage("assets/monster_wood1.png")]);
   monster.setImage(Monster_Status.Atacking, [loadImage("assets/monster_wood1.png")]);
@@ -228,19 +228,19 @@ function getTargetPos(uid) {
   // console.log("posRandam=", posRamdom)
   // return gTargetPosDict[posRamdomX];
 
-  var gain = 1;
-  var biasx = 0 / gain;
-  var biasy = 0 / gain;
+  var gain = 200;
+  var biasx = 100 / gain;
+  var biasy = 200 / gain;
   var minX = 0 + biasx;
-  var maxX = gCanvasSize[0] / gain - biasx;
+  var maxX = (gCanvasSize[0]) / gain - biasx;
   var minY = 0 + biasy;
-  var maxY = gCanvasSize[1] / gain - biasy;
+  var maxY = (gCanvasSize[1]) / gain - biasy;
 
   var posRamdomX = (Math.floor(Math.random() * (maxX + 1 - minX)) + minX) * gain;
   var posRamdomY = (Math.floor(Math.random() * (maxY + 1 - minY)) + minY) * gain;
 
   return [posRamdomX, posRamdomY];
-  // return [500, 500];
+  // return [400, 300];
 
   for (var k of Object.keys(gTargetPosDict)) {
     //console.log("uid=",uid, "key=",k);
@@ -259,7 +259,7 @@ function createMagic(oid, uid, message) {
   let magicSuccess = searchMagicDctinary(message);
   for (let j = 0; j < 3; j++) {
     if (magicSuccess[j] > 0) {
-      for (let i = 0; i < magicSuccess[j]; i = i + 4) {
+      for (let i = 0; i < magicSuccess[j]; i = i + 1) {
         console.log("magic" + str(j) + " success: " + str(i) + '\n');
 
         //oid(オペレータID)からスタート位置を決める。
@@ -381,13 +381,13 @@ function checkHit() {
 function callMonster() {
   //時間が早かったら、もしくは、4体既にいたらモンスターを召喚しない
   //tminからtmaの間の時間で召喚する。
-  let tmin = 1;
-  let tmax = 2;
+  let tmin = 0.5;
+  let tmax = 1;
   if (Date.now() - gMonsterCallTime < (Math.floor(Math.random() * (tmax + 1 - tmin)) + tmin) * 1000) {
     return;
   }
   //4体いる場合には追加しない。
-  if (gMonsterList.length >= 15) {
+  if (gMonsterList.length >= 10) {
     return;
   }
 
@@ -432,8 +432,8 @@ function callMonster() {
   let uid = 0;// parseInt(emptyList[Math.floor(Math.random() * emptyList.length)]);
 
   monster.uid = uid;
-  monster.x = getTargetPos(uid)[0];
-  monster.y = getTargetPos(uid)[1];
+  monster.x = getTargetPos(uid)[0]/2;
+  monster.y = getTargetPos(uid)[1]/2;
   // monster.x = 500; getTargetPos(uid)[0];
   // monster.y = 500; getTargetPos(uid)[1];
   monster.changeStatus(Monster_Status.Create);
@@ -519,8 +519,8 @@ function draw() {
       for (let j = 0; j < 3; j++) {
         if (magicSuccess[j] > 0) {
           for (let i = 0; i < magicSuccess[j]; i++) {
-            createPlayer(gTestOid);
-            createMagic(gTestOid, gTestUid, gTestMessageList[gTestMessageIndex]);
+            // createPlayer(gTestOid);
+            // createMagic(gTestOid, gTestUid, gTestMessageList[gTestMessageIndex]);
             console.log("magic" + str(j) + " success: " + str(i) + '\n');
           }
         } else {
@@ -580,6 +580,16 @@ function draw() {
     let message = gMessageList.getMessage(ou[0], ou[1]);
     //console.log("message",message)
     text(k + " " + message, 300, 20 + 10 * i);
+    if (message != '') {
+    //   gDisplayedMsgList[k] = message;
+    //   gDisplayedMsgKanaList[k] = convertRomanToKana(message);
+      gPlayerList[ou[1]].message = message;
+    }
+    
+
+    // for (var player of gPlayerList) {
+    //   player.message = message;
+    // }
 
     //文字が改行まで届いている場合
     if (gMessageList.isCompleted(message)) {
@@ -595,12 +605,13 @@ function draw() {
 
       console.log("operator=", ou[0], " unitid=", ou[1], " message=", message.toLowerCase(), " expected len=", expectedLen, " len=", message.length);
       let magicSuccess = searchMagicDctinary(message);
+      createMagic(ou[1], ou[1], message);
       for (let j = 0; j < 3; j++) {
         if (magicSuccess[j] > 0) {
-          for (let i = 0; i < magicSuccess[j]; i++) {
+          for (let i = 0; i < (magicSuccess[j]); i++) {
             // createPlayer(ou[0]);
-            createPlayer(ou[1]);
-            createMagic(ou[1], ou[1], message);
+            // createPlayer(ou[1]);
+            // createMagic(ou[1], ou[1], message);
             console.log("magic" + str(j) + " success: " + str(i) + '\n');
           }
         } else {
