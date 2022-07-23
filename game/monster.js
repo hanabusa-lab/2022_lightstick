@@ -39,7 +39,7 @@ class Monster {
         this.imgIndex = 0;
         this.preTime = 0; //draw 更新前の時間
         this.uid = 0; //対応するユニット番号
-        this.weakMagic = 0;
+        this.magicKind = Magic_Kind.Fire;
     }
 
     //マジックを複製する。
@@ -62,6 +62,7 @@ class Monster {
         clone.imgIndex = this.imgIndex;
         clone.preTime = Date.now();
         clone.uid = this.uid;
+        clone.magicKind = this.magicKind;
         return clone;
     }
 
@@ -111,7 +112,7 @@ class Monster {
 
         fill(255, 255, 0);
         // text("HP:"+this.hp,20,20); 
-        rect(this.x, this.y, (this.hp) * 2, 20)
+        rect(this.x, this.y, (this.hp) * 4, 20)
         // rect(820, 600, (this.hp) * 2, 20)
         pop();
 

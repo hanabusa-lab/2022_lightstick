@@ -1,5 +1,6 @@
 //マジックの種類
 var Magic_Kind = {
+    Wood_: -1,
     Fire: 0,
     Water: 1,
     Wood: 2,
@@ -186,7 +187,10 @@ class Magic {
         //hitの場合も消える。
         if (this.status == Magic_Status.Hit && Date.now() - this.preStatusTime > 500) {
             //console.log("change to none");
-            this.changeStatus(this.status = Magic_Status.None);
+            // this.changeStatus(this.status = Magic_Status.None);
+            this.changeStatus(this.status = Magic_Status.Create);
+            
+            this.preTime = Date.now();
             return;
         }
         this.preTime = Date.now();

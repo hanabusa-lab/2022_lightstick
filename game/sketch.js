@@ -59,7 +59,7 @@ function preload() {
   monster.kind = Monster_Kind.Dragon_Fire;
   monster.hp = 200;
   monster.hpMax = 200;
-  monster.weakMagic = Magic_Kind.Water;
+  monster.magicKind = Magic_Kind.Water;
   monster.scale = 1;
   let timg = loadImage("assets/monster_fire0.png");
   monster.setImage(Monster_Status.Create, [timg]); //createはnormalと一緒
@@ -68,6 +68,7 @@ function preload() {
   timg = loadImage("assets/monster_fire0.png");
   monster.setImage(Monster_Status.Atacked, [timg]);
   monster.setImage(Monster_Status.Dead, [timg]); //deadとatackedは一緒。
+  monster.status = Monster_Status.Normal;
   //monster.changeStatus(Monster_Status.Create);
   //monster.x =getTargetPos(0)[0];
   //monster.y =getTargetPos(0)[1];
@@ -80,7 +81,7 @@ function preload() {
   monster.kind = Monster_Kind.Dragon_Water;
   monster.hp = 200;
   monster.hpMax = 200;
-  monster.weakMagic = Magic_Kind.Water;
+  monster.magicKind = Magic_Kind.Wood;
   monster.scale = 1;
   monster.setImage(Monster_Status.Create, [loadImage("assets/monster_water0.png")]);
   monster.setImage(Monster_Status.Normal, [loadImage("assets/monster_water0.png")]);
@@ -95,7 +96,7 @@ function preload() {
   monster.kind = Monster_Kind.Dragon_Wood;
   monster.hp = 200;
   monster.hpMax = 200;
-  monster.weakMagic = Magic_Kind.Wood;
+  monster.magicKind = Magic_Kind.Fire;
   monster.scale = 1;
   monster.setImage(Monster_Status.Create, [loadImage("assets/monster_wood0.png")]);
   monster.setImage(Monster_Status.Normal, [loadImage("assets/monster_wood0.png")]);
@@ -108,7 +109,7 @@ function preload() {
   // 炎弱モンスター
   monster = new Monster();
   monster.kind = Monster_Kind.Mob_Fire;
-  monster.weakMagic = Magic_Kind.Fire;
+  monster.magicKind = Magic_Kind.Water;
   monster.scale = 1;
   timg = loadImage("assets/monster_fire1.png");
   monster.setImage(Monster_Status.Create, [timg]); //createはnormalと一緒
@@ -128,7 +129,7 @@ function preload() {
   monster.kind = Monster_Kind.Mob_Water;
   monster.hp = 100;
   monster.hpMax = 100;
-  monster.weakMagic = Magic_Kind.Water;
+  monster.magicKind = Magic_Kind.Wood;
   monster.scale = 1;
   monster.setImage(Monster_Status.Create, [loadImage("assets/monster_water1.png")]);
   monster.setImage(Monster_Status.Normal, [loadImage("assets/monster_water1.png")]);
@@ -143,7 +144,7 @@ function preload() {
   monster.kind = Monster_Kind.Mob_Wood;
   monster.hp = 100;
   monster.hpMax = 100;
-  monster.weakMagic = Magic_Kind.Wood;
+  monster.magicKind = Magic_Kind.Fire;
   monster.scale = 1;
   monster.setImage(Monster_Status.Create, [loadImage("assets/monster_wood1.png")]);
   monster.setImage(Monster_Status.Normal, [loadImage("assets/monster_wood1.png")]);
@@ -160,9 +161,9 @@ function preload() {
   magic = new Magic();
   magic.kind = Magic_Kind.Fire;
   magic.setImage(Magic_Status.Create, [loadImage("assets/fire_create.png"), loadImage("assets/fire_create.png")])
-  magic.setImage(Magic_Status.Normal, [loadImage("assets/fire_normal1.png"), loadImage("assets/fire_normal2.png"),])
-  magic.setImage(Magic_Status.Hit, [loadImage("assets/fire_hit.png")])
-  magic.setImage(Magic_Status.End, [loadImage("assets/fire_end.png")])
+  magic.setImage(Magic_Status.Normal, [loadImage("assets/fire_create.png"), loadImage("assets/fire_create.png"),])
+  magic.setImage(Magic_Status.Hit, [loadImage("assets/fire_create.png")])
+  magic.setImage(Magic_Status.End, [loadImage("assets/fire_create.png")])
   gMagicLibDict[Magic_Kind.Fire] = magic;
 
 
@@ -185,7 +186,7 @@ function preload() {
   magic.setImage(Magic_Status.End, [loadImage("assets/wood_create.png")])
   gMagicLibDict[Magic_Kind.Wood] = magic;
 
-  gBackImg = loadImage('assets/background.png');
+  gBackImg = loadImage('assets/background2.png');
   gBackPointImg = loadImage('assets/player_point_background.png');
 
   //音の読み込み
@@ -193,9 +194,11 @@ function preload() {
   // gSoundFire = loadSound('assets/fire.mp3');
 
 
-  gFontFire = loadFont('assets/IoEI.ttf');
+  // gFontFire = loadFont('assets/IoEI.ttf');
+  gFontFire = loadFont('assets/fontFire.otf');
   gFontWater = loadFont('assets/IoEI.ttf');
-  gFontWood = loadFont('assets/Hiran-Kanan_wood.TTF');
+  // gFontWood = loadFont('assets/Hiran-Kanan_wood.TTF');
+  gFontWood = loadFont('assets/fontWood.ttf');
   gFontSystem = loadFont('assets/IoEI.ttf');
   gFontOther = loadFont('assets/SourceSansPro-Regular.ttf');
   gFont = [gFontFire, gFontWater, gFontWood, gFontSystem, gFontOther];
@@ -205,8 +208,7 @@ function preload() {
   gSeAttackMagicList[2] = loadSound('assets/attack_sound/woodMagic1.mp3');
   gSeMonsterList[0] = loadSound('assets/attack_sound/monsterPop.mp3');
   gSeMonsterList[1] = loadSound('assets/attack_sound/monsterDisappear.mp3');
-  gBgmList[0] = loadSound('assets/battleSound.mp3');
-
+  gBgmList[0] = loadSound('assets/music/battleSound.mp3');
 
 }
 
@@ -238,9 +240,9 @@ function getTargetPos(uid) {
   // console.log("posRandam=", posRamdom)
   // return gTargetPosDict[posRamdomX];
 
-  var gain = 200;
-  var biasx = 100 / gain;
-  var biasy = 200 / gain;
+  var gain = 50;
+  var biasx = 250 / gain;
+  var biasy = 400 / gain;
   var minX = 0 + biasx;
   var maxX = (gCanvasSize[0]) / gain - biasx;
   var minY = 0 + biasy;
@@ -296,7 +298,7 @@ function createMagic(oid, uid, message) {
         cloneMagic.target_y = tpos[1];
         cloneMagic.oid = oid;
         cloneMagic.changeStatus(Magic_Status.Create);
-        cloneMagic.setVelocity(opos, tpos, Magic_Speed.Low);
+        cloneMagic.setVelocity(opos, tpos, Magic_Speed.Middle);
         cloneMagic.message = message;
 
         //magic listに追加する。
@@ -364,9 +366,9 @@ function checkHit() {
         continue;
       }
 
-      tdist = Math.sqrt((magic.x - monster.x) ** 2 + (magic.y - monster.y) ** 2);
+      tdist = Math.sqrt((magic.x - (monster.x + 200)) ** 2 + (magic.y - monster.y) ** 2);
       //console.log("tdist=",tdist);
-      if (tdist < dist && magic.status != Magic_Status.Hit && monster.status != Monster_Status.Atacked && (magic.kind != monster.weakMagic)) {
+      if (tdist < dist && magic.status != Magic_Status.Hit && monster.status != Monster_Status.Atacked && (magic.kind == (monster.magicKind))) {
         magic.changeStatus(Magic_Status.Hit);
         monster.changeStatus(Monster_Status.Atacked);
         monster.hp -= magic.power;
@@ -476,7 +478,6 @@ function draw() {
 
   } else {
     gBgmList[0].play();
-
   }
 
   for (let i = 0; i < 10; i++) {
