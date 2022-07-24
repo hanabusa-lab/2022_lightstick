@@ -240,7 +240,7 @@ function getTargetPos(uid) {
   // console.log("posRandam=", posRamdom)
   // return gTargetPosDict[posRamdomX];
 
-  var gain = 50;
+  var gain = 250;
   var biasx = 250 / gain;
   var biasy = 400 / gain;
   var minX = 0 + biasx;
@@ -401,7 +401,7 @@ function callMonster() {
     return;
   }
   //4体いる場合には追加しない。
-  if (gMonsterList.length >= 10) {
+  if (gMonsterList.length >= 7) {
     return;
   }
 
