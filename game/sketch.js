@@ -668,7 +668,7 @@ function draw() {
 
   //デバック文の表示
   if (gTestFg) {
-    text("[Debug]\n oid=" + gTestOid + " \n uid=" + gTestUid + "\n message=" + gTestMessageList[gTestMessageIndex], 10, 20);
+    // text("[Debug]\n oid=" + gTestOid + " \n uid=" + gTestUid + "\n message=" + gTestMessageList[gTestMessageIndex], 10, 20);
   }
 
   //当たり判定確認
