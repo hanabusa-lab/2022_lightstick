@@ -116,6 +116,8 @@ var waterDictionary = [
     'syumokuzame',
     'hannma-heddosya-ku',
     'kame',
+    'koori',
+    'kori'
 
 
 ]
