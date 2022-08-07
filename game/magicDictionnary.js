@@ -35,19 +35,21 @@ var fireDictionary = [
     'karinn',
     'kototu',
     'matti',
-    'yougann','yougan',
+    'yougann', 'yougan',
     'zyuu',
-    'aruko-rurannpu','arukoーrurannpu',
-    'rannpu','ranpu',
-    'ennzinn','enzin',
-    'huraipann','huraipan',
+    'aruko-rurannpu', 'arukoーrurannpu',
+    'rannpu', 'ranpu',
+    'ennzinn', 'enzin',
+    'huraipann', 'huraipan',
     'yamakazi',//火山
     '000\n',
     'furo', 'ofuro',
     'kare-',
     'hanabi',
     'kyanpufaiya-', 'kyannpufaiya-', 'kyanpuhpaiya-', 'kyannpuphaiya-',
-    'kyanpufaia-', 'kyannpufaia-', 'kyanpuhpaia-', 'kyannpuphaia-'
+    'kyanpufaia-', 'kyannpufaia-', 'kyanpuhpaia-', 'kyannpuphaia-',
+    'kyanpufaiya', 'kyannpufaiya', 'kyanpuhpaiya', 'kyannpuphaiya',
+    'kyanpufaia', 'kyannpufaia', 'kyanpuhpaia', 'kyannpuphaia'
 
 ]
 
@@ -89,7 +91,7 @@ var waterDictionary = [
     'fish',
     'nettaigyo',
     'daikouzui',
-    'mizuhuusenn','mizuhuusen',
+    'mizuhuusenn', 'mizuhuusen',
     'reitou',
     'kaitou',
     'sake',
@@ -156,15 +158,15 @@ var woodDictionary = [
     'rinnkaigakkou',
     'yasai',
     'asagao',
-    'kogarashi','kagarasi',
-    'zisinn','zishinn','zisin',
+    'kogarashi', 'kagarasi',
+    'zisinn', 'zishinn', 'zisin',
     'yamakazi',
     'dosyakyzure',
     'taihuu',
     'happa',
     'sennpuuki',
     'tannpopo',
-    'toumorokosi','toumorokoshi',
+    'toumorokosi', 'toumorokoshi',
     'yamakazi',//火山
     'ha',
     'mushi', 'musi',
@@ -172,12 +174,17 @@ var woodDictionary = [
     'funka',
     'kyanpufaiya-', 'kyannpufaiya-', 'kyanpuhpaiya-', 'kyannpuphaiya-',
     'kyanpufaia-', 'kyannpufaia-', 'kyanpuhpaia-', 'kyannpuphaia-',
+    'kyanpufaiya', 'kyannpufaiya', 'kyanpuhpaiya', 'kyannpuphaiya',
+    'kyanpufaia', 'kyannpufaia', 'kyanpuhpaia', 'kyannpuphaia',
     'sougen', 'sougenn',
-    'pikunikku', 
+    'pikunikku',
     'haikinngu', 'haikingu',
-    'sakura', 
-    'hanami'
-    
+    'sakura',
+    'hanami',
+    'tanbo', 'tannbo',
+    'sougen', 'sougenn'
+
+
 ]
 
 

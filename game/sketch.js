@@ -386,6 +386,24 @@ function checkHit() {
             console.log("point=", player.point, "power=", magic.power);
           }
         }
+      } else if (tdist < dist && magic.status != Magic_Status.Hit && monster.status != Monster_Status.Atacked) {
+        magic.changeStatus(Magic_Status.Hit);
+        monster.changeStatus(Monster_Status.Atacked);
+        monster.hp -= magic.power / 2;
+        if (monster.hp <= 0) {
+          gSeMonsterList[1].play();
+          monster.hp = 0;
+          monster.changeStatus(Monster_Status.Dead);
+          //モンスターがすぐにと登場しないように、モンスター召喚時間をセットし直す。
+          gMonsterCallTime = Date.now();
+        }
+
+        for (var player of gPlayerList) {
+          if (magic.oid == player.oid) {
+            player.point += magic.power / 20;
+            console.log("point=", player.point, "power=", magic.power);
+          }
+        }
       }
     }
   }
